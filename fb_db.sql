@@ -6,15 +6,15 @@ create table users (
 	id int PRIMARY KEY AUTO_INCREMENT,
     fullName nvarchar(100) NOT NULL,
     loginPassword nvarchar(255) NOT NULL,
-    privacy nchar(2)  check(privacy='pu' or privacy='pr') default 'pr',
+    privacy nchar(2)  CHECK(privacy='pu' OR privacy='pr') DEFAULT 'pr',
     gender nchar(1) NOT NULL CHECK (gender IN ('M', 'F', 'O')),
     birthDate date NOT NULL,
     maritalStatus nchar(1) CHECK (maritalStatus IN ('S', 'W', 'M', 'D')),
     city nvarchar(50) NOT NULL,
     country nvarchar(50),
     email nvarchar(100) NOT NULL UNIQUE,
-    phoneNumber nchar(9) NOT NULL CHECK(phoneNumber REGEXP '^9[0-9]{8}$') unique,
-   createDate DATE DEFAULT (CURRENT_DATE)
+    phoneNumber nchar(9) NOT NULL CHECK(phoneNumber REGEXP '^9[0-9]{8}$') UNIQUE,
+    createDate DATE DEFAULT (CURRENT_DATE)
 );
 
 create table posts (
@@ -59,8 +59,8 @@ create table comments_likes (
 create table friendship (
 	userId int NOT NULL,
     friendId int NOT NULL ,
-    friendshipStatus nchar(1) CHECK (friendshipStatus='P' or friendshipStatus='F' or friendshipStatus='b') NOT NULL,
-    friendDate datetime default NULL,
+    friendshipStatus nchar(1) CHECK (friendshipStatus='P' OR friendshipStatus='F' OR friendshipStatus='b') NOT NULL,
+    friendDate datetime DEFAULT NULL,
     PRIMARY KEY (userId,friendId),
 	FOREIGN KEY(userId) REFERENCES users(id),
 	FOREIGN KEY(friendId) REFERENCES users (id),
