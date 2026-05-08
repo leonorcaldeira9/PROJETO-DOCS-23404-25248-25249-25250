@@ -13,8 +13,8 @@ create table users (
     city nvarchar(50) NOT NULL,
     country nvarchar(50),
     email nvarchar(100) NOT NULL UNIQUE,
-    phoneNumber nchar(9) NOT NULL CHECK(phoneNumber REGEXP '^9[0-9]{8}$'),
-    createDate datetime DEFAULT current_timestamp
+    phoneNumber nchar(9) NOT NULL CHECK(phoneNumber REGEXP '^9[0-9]{8}$') unique,
+   createDate DATE DEFAULT (CURRENT_DATE)
 );
 
 create table posts (
