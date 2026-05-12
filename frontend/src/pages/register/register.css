@@ -1,0 +1,14 @@
+.register {
+    background: linear-gradient(to right, rgba(255, 204, 128, 0.5), rgba(137, 154, 240, 0.5));
+    min-height: 100vh;
+}
+
+.card-style {
+    border-radius: 15px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.btn-primary {
+    border-radius: 15px;
+}
