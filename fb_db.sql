@@ -22,7 +22,8 @@ create table posts (
     idUser int NOT NULL,
     postDate datetime DEFAULT CURRENT_TIMESTAMP,
     postText text,
-    FOREIGN KEY (idUser) REFERENCES users(id)
+    FOREIGN KEY (idUser) REFERENCES users(id) ON DELETE CASCADE
+    
 );
 
 create table comments (
@@ -32,9 +33,9 @@ create table comments (
     commentDate datetime DEFAULT CURRENT_TIMESTAMP,
     parentCommentId int,
     commentText text NOT NULL,
-	FOREIGN KEY (idPost) REFERENCES posts(id),
-    FOREIGN KEY (idUser) REFERENCES users(id),
-    FOREIGN KEY (parentCommentId) REFERENCES comments(id)
+	FOREIGN KEY (idPost) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (idUser) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (parentCommentId) REFERENCES comments(id) ON DELETE CASCADE
 );
 
 create table posts_likes (
@@ -42,8 +43,8 @@ create table posts_likes (
     idPost int NOT NULL,
     likeDate datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (idUser, idPost),
-    FOREIGN KEY (idUser) REFERENCES users(id),
-    FOREIGN KEY (idPost) REFERENCES posts(id)
+    FOREIGN KEY (idUser) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (idPost) REFERENCES posts(id) ON DELETE CASCADE
 );
 
 create table comments_likes (
@@ -51,19 +52,19 @@ create table comments_likes (
     idComment int NOT NULL,
     likeDate datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (idUser, idComment),
-    FOREIGN KEY (idUser) REFERENCES users(id),
-    FOREIGN KEY (idComment) REFERENCES comments(id)
+    FOREIGN KEY (idUser) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (idComment) REFERENCES comments(id) ON DELETE CASCADE
 );
 
 
 create table friendship (
 	userId int NOT NULL,
     friendId int NOT NULL ,
-    friendshipStatus nchar(1) CHECK (friendshipStatus='P' OR friendshipStatus='F' OR friendshipStatus='b') NOT NULL,
+    friendshipStatus nchar(1) CHECK (friendshipStatus='P' OR friendshipStatus='F' OR friendshipStatus='B') NOT NULL,
     friendDate datetime DEFAULT NULL,
     PRIMARY KEY (userId,friendId),
-	FOREIGN KEY(userId) REFERENCES users(id),
-	FOREIGN KEY(friendId) REFERENCES users (id),
+	FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+	FOREIGN KEY(friendId) REFERENCES users (id) ON DELETE CASCADE,
     CHECK(userId<> friendId)
 );
 
