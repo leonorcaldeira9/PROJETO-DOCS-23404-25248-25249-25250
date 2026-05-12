@@ -16,12 +16,12 @@ user.get('/:id', (req,res)=> {
 
 
 user.post('/',(req,res)=>{
-  const {fullName,loginPassword,gender,birthDate,maritalStatus,city,country,email,phoneNumber}=req.body;
-  db.query('Insert into users(fullName,loginPassword,gender,birthDate,maritalStatus,city,country,email,phoneNumber) values(?,?,?,?,?,?,?,?,?)',[fullName,loginPassword,gender,birthDate,maritalStatus,city,country,email,phoneNumber],(err,result)=>{
+  const {fullName,loginPassword,privacy,gender,birthDate,maritalStatus,city,country,email,phoneNumber}=req.body;
+  db.query('Insert into users(fullName,loginPassword,privacy,gender,birthDate,maritalStatus,city,country,email,phoneNumber) values(?,?,?,?,?,?,?,?,?,?)',[fullName,loginPassword,privacy,gender,birthDate,maritalStatus,city,country,email,phoneNumber],(err,result)=>{
     if (err) {
       return res.status(500).json(err);
     }
-    res.json({id:result.insertId,fullName,loginPassword,gender,birthDate,maritalStatus,city,country,email,phoneNumber});
+    res.json({id:result.insertId,fullName,loginPassword,privacy,gender,birthDate,maritalStatus,city,country,email,phoneNumber});
   })
 });
 
@@ -37,11 +37,14 @@ user.put('/:id',(req,res)=>{
   })
 });
 
-
-
 user.delete('/:id',(req,res)=>{
   const {id} = req.params;
-  db.query('delete on cascade  from users where id=?',[id],(err,result)=>{})
+  db.query('delete on cascade  from users where id=?',[id],(err,result)=>{
+    if(err){
+      return res.status(500).json(err);
+    }
+    res.json("Eliminado com sucesso")
+  })
 })
 
 
