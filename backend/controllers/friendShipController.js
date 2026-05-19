@@ -6,6 +6,11 @@ const getFriendshipStatus = (req, res) => {
 
     FriendshipModel.getFriendshipStatus(userId, friendId, (err, status) => {
         if (err) return res.status(400).send();
+
+        if (status.affectedRows === 0) {
+            return res.status(404).json({ error: "Friendship not found." });
+        }
+
         return res.json(status);
     });
 };
@@ -15,7 +20,12 @@ const getFriendsByUser = (req, res) => {
     if (userId === undefined) return res.status(400).send("Este erro nao é fixe");
 
     FriendshipModel.getFriendsByUser(userId, (err, friends) => {
-        if (err) return res.status(400).send("este erro é fixe");
+        if (err) return res.status(400).send();
+
+        if (friends.affectedRows === 0) {
+            return res.status(404).json({ error: "Friendship not found." });
+        }
+
         return res.json(friends);
     });
 };
@@ -38,7 +48,12 @@ const updateFriendshipStatus = (req, res) => {
     if (!userId || !friendId || !friendshipStatus) return res.status(400).send("Este erro ao update status");
 
     FriendshipModel.updateFriendshipStatus(userId, friendId, friendshipStatus, (err, result) => {
-        if (err) return res.status(400).send("Este erro e parvo");
+        if (err) return res.status(400).send();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Friendship not found." });
+        }
+
         return res.json("Friendship status updated to " + friendshipStatus + ".");
     });
 };
@@ -49,6 +64,11 @@ const deleteFriendship = (req, res) => {
 
     FriendshipModel.deleteFriendship(userId, friendId, (err, result) => {
         if (err) return res.status(400).send();
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Friendship not found." });
+        }
+
         return res.json("Friendship or request deleted successfully.");
     });
 };

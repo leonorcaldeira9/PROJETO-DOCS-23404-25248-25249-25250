@@ -1,0 +1,50 @@
+const jwt = require('jsonwebtoken');
+
+function authJWT(options = {}) {
+    const {
+        secret = 'volvosSaoBonitos-09-PeugeotsTambem-27-OpelTambem-20-naoTemPopo-13',
+        algorithms = ['HS256'],
+        audience,
+        issuer,
+        required = true,
+    } = options;
+
+    return (req, res, next) => {
+        const authHeader = req.headers['authorization'];
+
+        if (!authHeader) {
+            if (!required) return next();
+            return res.status(401).json({ message: 'Token em falta' });
+        }
+
+        const [scheme, token] = authHeader.split(' ');
+
+        if (scheme !== 'Bearer' || !token) {
+            return res.status(401).json({ message: 'Formato de token inválido' });
+        }
+
+        try {
+            const decoded = jwt.verify(token, secret, {
+                algorithms,
+                audience,
+                issuer,
+            });
+
+            req.user = decoded;
+
+            return next();
+        } catch (err) {
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).json({ message: 'Token expirado' });
+            }
+
+            if (err.name === 'JsonWebTokenError') {
+                return res.status(403).json({ message: 'Token inválido' });
+            }
+
+            return res.status(403).json({ message: 'Não autorizado' });
+        }
+    };
+}
+
+module.exports = authJWT;

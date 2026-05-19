@@ -31,7 +31,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/comments', commentsRouter);
-//app.use('/commentLikes', commentLikesRouter);
+app.use('/commentLikes', commentLikesRouter);
 app.use('/friendShip',friendShipRouter );
 app.use('/postLikes', postLikeRouter);
 

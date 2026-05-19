@@ -8,15 +8,16 @@ const {
     updateFriendshipStatus,
     deleteFriendship
 } = require('../controllers/friendshipController');
+const authJWT = require("../middlewares/authJWT");
 
-router.get('/status/:userId/:friendId', getFriendshipStatus);
+router.get('/status/:userId/:friendId', authJWT(), getFriendshipStatus);
 
-router.get('/user/:id', getFriendsByUser);
+router.get('/user/:id', authJWT(), getFriendsByUser);
 
-router.post('/request', createFriendRequest);
+router.post('/request', authJWT(), createFriendRequest);
 
-router.put('/update', updateFriendshipStatus);
+router.put('/update', authJWT(), updateFriendshipStatus);
 
-router.delete('/delete/:userId/:friendId', deleteFriendship);
+router.delete('/delete/:userId/:friendId', authJWT(), deleteFriendship);
 
 module.exports = router;

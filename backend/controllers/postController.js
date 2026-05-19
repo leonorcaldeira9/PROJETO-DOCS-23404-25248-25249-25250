@@ -9,6 +9,9 @@ const getPostById = (req, res) => {
         if (err) {
             return res.status(500).send();
         }
+        if (post.affectedRows === 0) {
+            return res.status(404).json({ error: "Post not found." });
+        }
         return res.json(post);
     });
 };
@@ -19,6 +22,9 @@ const getPostsByUser = (req, res) => {
         if (err) {
             return res.status(500).send();
         }
+        if (posts.affectedRows === 0) {
+            return res.status(404).json({ error: "Post not found." });
+        }
         return res.json(posts);
     })
 }
@@ -27,6 +33,10 @@ const getPosts = (req, res) => {
     PostModel.getPosts((err, posts) => {
         if (err) {
             return res.status(400).send();
+        }
+
+        if (posts.affectedRows === 0) {
+            return res.status(404).json({ error: "Posts not found." });
         }
         return res.json(posts);
     });
@@ -58,6 +68,9 @@ const updatePost = (req, res) => {
         if (err) {
             return res.status(400).send();
         }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Post not found." });
+        }
         return res.json("Post updated successfully.");
     });
 };
@@ -72,6 +85,11 @@ const deletePost = (req, res) => {
         if (err) {
             return res.status(400).send();
         }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Post not found." });
+        }
+
         return res.json("Post " + id + " deleted successfully.");
     });
 };
