@@ -14,13 +14,13 @@ function authJWT(options = {}) {
 
         if (!authHeader) {
             if (!required) return next();
-            return res.status(401).json({ message: 'Token em falta' });
+            return res.status(401).json({ message: 'Missing token' });
         }
 
         const [scheme, token] = authHeader.split(' ');
 
         if (scheme !== 'Bearer' || !token) {
-            return res.status(401).json({ message: 'Formato de token inválido' });
+            return res.status(401).json({ message: 'Invalid token format' });
         }
 
         try {
@@ -35,14 +35,14 @@ function authJWT(options = {}) {
             return next();
         } catch (err) {
             if (err.name === 'TokenExpiredError') {
-                return res.status(401).json({ message: 'Token expirado' });
+                return res.status(401).json({ message: 'Expired token' });
             }
 
             if (err.name === 'JsonWebTokenError') {
-                return res.status(403).json({ message: 'Token inválido' });
+                return res.status(403).json({ message: 'Invalid token' });
             }
 
-            return res.status(403).json({ message: 'Não autorizado' });
+            return res.status(403).json({ message: 'Unauthorized' });
         }
     };
 }

@@ -74,7 +74,7 @@ create table friendship (
 
 /* INSERTS USUÁRIOS COM PASSWORDS -----------------------------------------------------*/
 
-INSERT INTO users (fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber) VALUES
+/*INSERT INTO users (fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber) VALUES
 ('Ana Sofia Silva', 'pass_ana92', 'F', '1992-05-14', 'S', 'Lisboa', 'Portugal', 'ana.silva92@gmail.com', '911223344'),
 ('João Pedro Santos', 'senha_jp85', 'M', '1985-11-23', 'M', 'Porto', 'Portugal', 'jpsantos@hotmail.com', '933456789'),
 ('Maria João Costa', 'mjoao_2024', 'F', '1998-02-10', 'S', 'Coimbra', 'Portugal', 'mjoaocosta@yahoo.com', '966778899'),
@@ -104,7 +104,41 @@ INSERT INTO users (fullName, loginPassword, gender, birthDate, maritalStatus, ci
 ('Cris Martins', 'cris_prt98', 'O', '1998-11-27', 'S', 'Porto', 'Portugal', 'crismartins98@outlook.com', '938899001'),
 ('Rita Faria', 'rita_lx87', 'F', '1987-04-14', 'M', 'Lisboa', 'Portugal', 'ritafaria87@gmail.com', '965566778'),
 ('Tomás Correia', 'tomas_ev02', 'M', '2002-01-22', 'S', 'Évora', 'Portugal', 'tomas.correia02@gmail.com', '916677889'),
-('Helena Batista', 'helena_bj73', 'F', '1973-09-05', 'W', 'Beja', 'Portugal', 'hbatista73@hotmail.com', '931122334');
+('Helena Batista', 'helena_bj73', 'F', '1973-09-05', 'W', 'Beja', 'Portugal', 'hbatista73@hotmail.com', '931122334');*/
+
+INSERT INTO users (fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber) VALUES
+('Ana Sofia Silva', '$2b$10$K5zs20hMH4pR2ZyCvjddOOZDfT.uivVtJcAOWxpXbkqu9T1bxftAy', 'F', '1992-05-14', 'S', 'Lisboa', 'Portugal', 'ana.silva92@gmail.com', '911223344'),
+('João Pedro Santos', '$2b$10$VQve3kzEhssgEiVAJ8opvedzskTlS3C8rYWd50gOjboMZNgwENA8q', 'M', '1985-11-23', 'M', 'Porto', 'Portugal', 'jpsantos@hotmail.com', '933456789'),
+('Maria João Costa', '$2b$10$g/i7tPXoQVNqGjLhvEIoDuEpgG22BaUhnSdBgZUOsQ0PYvfIT85PW', 'F', '1998-02-10', 'S', 'Coimbra', 'Portugal', 'mjoaocosta@yahoo.com', '966778899'),
+('Tiago Ferreira', '$2b$10$ON8m.1b2RhH6TagDKZlpheElNyTIWZ83C/cLt9BRX7u7Jn2cM08r.', 'M', '1990-08-30', 'M', 'Braga', 'Portugal', 'tiago.ferreira.90@gmail.com', '922334455'),
+('Inês Martins', '$2b$10$Qf0/ZRX19PiJlmyfZyxkWOIARfIYM8eON3FKWcKaHTocVptRg2z3m', 'F', '2001-12-05', 'S', 'Faro', 'Portugal', 'ines.martins01@outlook.com', '910101010'),
+('Rui Oliveira', '$2b$10$7yZt11F2wyjMUeYAgr71FeTPA2xw4gLgOr6rEjrI02rJ2ZsVYYE4K', 'M', '1975-04-18', 'D', 'Aveiro', 'Portugal', 'rui.oliveira75@gmail.com', '931231231'),
+('Carla Ribeiro', '$2b$10$PZ5fHRttoga5HTmpbYzDlu/UoPLyDspo6y3d9.SgO3D4nrVIG6Lwi', 'F', '1988-09-22', 'M', 'Leiria', 'Portugal', 'carlaribeiro88@gmail.com', '965432198'),
+('Alex Silva', '$2b$10$Y6P6638sj7tfMjPPInt22ujkZ/ama0RRs9o9Lk11GzbeN8QQN.QdC', 'O', '1995-07-11', 'S', 'Lisboa', 'Portugal', 'alex.silva.lx@gmail.com', '918273645'),
+('Miguel Rodrigues', '$2b$10$akcTwOfwWZGPf.EG9F66u.m0tNSSVtyRIO0svRjQiUD2dzuBSz8ki', 'M', '1982-01-15', 'D', 'Setúbal', 'Portugal', 'miguel.rodrigues82@hotmail.com', '937654321'),
+('Sofia Almeida', '$2b$10$6QTtpLp11/EMHrOwvWEzhe1mWRnwAYQf3BknkyxneMGGgAkfi8RM6', 'F', '1993-06-25', 'M', 'Porto', 'Portugal', 'sofiaalmeida93@yahoo.com', '961122334'),
+('Pedro Gonçalves', '$2b$10$gnDkBdFhMJ20eYFyF7k6QelBEMmodPKpuGiLfi177GtqG2gFDO3Fy', 'M', '1970-10-08', 'W', 'Viseu', 'Portugal', 'pgoncalves70@gmail.com', '915566778'),
+('Beatriz Lopes', '$2b$10$.2UH5fBou6DW.0ap4c9Zzu22FxnF6fTYsgn1DaiNX5DKTSGiwmXx2', 'F', '2003-03-12', 'S', 'Évora', 'Portugal', 'bealopes2003@gmail.com', '939876543'),
+('Nuno Mendes', '$2b$10$yXuuPdaXlDNJcYdNcJmY2uP/iDtt8gm1ORJOgvnQue2E3SJVfbjUK', 'M', '1989-11-02', 'M', 'Guimarães', 'Portugal', 'nuno.mendes.gui@outlook.com', '960001122'),
+('Mariana Fernandes', '$2b$10$BULLk87cSQzQhR0./xSpFez0VkFs/ZQc9wx8Fb4GXGwK5ei7jH3xK', 'F', '1997-08-19', 'S', 'Portalegre', 'Portugal', 'mari.fernandes@gmail.com', '912233445'),
+('Sam Costa', '$2b$10$2p.BFkq9OYFNVJFE1cfPZe9AO3sBwNr1JaTEqzCLLstouNhYF8R5y', 'O', '1999-04-30', 'S', 'Lisboa', 'Portugal', 'sam.costa99@gmail.com', '934455667'),
+('Carlos Pinto', '$2b$10$zLtTeMvWruvemo.llzRBz.D87VULUZh4YR03JrPrETI015NE.BXTO', 'M', '1968-12-14', 'M', 'Faro', 'Portugal', 'carlos.pinto68@hotmail.com', '968899001'),
+('Joana Teixeira', '$2b$10$gnSa.M85WuyxdmW8QPqrMOjI3QPFSX7VQltmbfX.MPgxU.Dp7buyy', 'F', '1991-02-28', 'D', 'Sintra', 'Portugal', 'joanateixeira91@gmail.com', '917788990'),
+('Diogo Carvalho', '$2b$10$R7YQxAEhrmh4Z.iyKkKfX.PbCuuVJDPpjkg.mjMbITtKyCNe2kTOu', 'M', '2000-09-17', 'S', 'Cascais', 'Portugal', 'diogo.carvalho00@yahoo.com', '935566778'),
+('Catarina Rocha', '$2b$10$M3RCAmtHycR.XPI70W2ae.jnX6PhFBOlhanegOijaICRR2Nr.22/C', 'F', '1986-05-09', 'M', 'Coimbra', 'Portugal', 'catrocha86@gmail.com', '962233445'),
+('Bruno Neves', '$2b$10$sWaYeCr7qSNgEB.azeHW4eTxJOR3rRlVOsfe5VNuZL9Shs8piVzCC', 'M', '1994-10-21', 'S', 'Vila Real', 'Portugal', 'brunoneves94@outlook.com', '914455667'),
+('Patrícia Gomes', '$2b$10$cZKe/vtfCyB67sbjyC2NAeVlgOTNh1J7LV6qg8OXRXK8Gk1GNyzma', 'F', '1980-07-03', 'D', 'Viana do Castelo', 'Portugal', 'patricomes@gmail.com', '936677889'),
+('Filipe Monteiro', '$2b$10$uM7aA3fCPX7jVtsh0X8aHeXVVclg5T.zPJHgNlEMPmXJR94YMMM.W', 'M', '1983-01-29', 'M', 'Braga', 'Portugal', 'filipemonteiro83@gmail.com', '964455667'),
+('Leonor Sousa', '$2b$10$S1O.2QrfpQriwxk5QpQyzeeeJA7nJ2b9r.bYhEfS5B.qv4RB5KGUO', 'F', '2005-06-16', 'S', 'Castelo Branco', 'Portugal', 'leonorsousa05@hotmail.com', '919900112'),
+('Ricardo Machado', '$2b$10$1ViTnGhn3xGxUosHFv7hH.R40LK.rb21Wq.ax9SSYeO12KC0uByUC', 'M', '1978-08-04', 'W', 'Santarém', 'Portugal', 'rmachado78@gmail.com', '932233445'),
+('Daniela Azevedo', '$2b$10$dIgsP22oEJNt2tCcvw2MjuZQwrxxQASx2fX.viWrdYDwFTEbNgotq', 'F', '1996-12-11', 'M', 'Setúbal', 'Portugal', 'dani.azevedo@yahoo.com', '967788990'),
+('André Pires', '$2b$10$BTytOD3ZTG2pMB9vRI4GEehokY2pW1MKN9w5MC1JlIFm1VcBZ05I2', 'M', '1992-03-08', 'S', 'Faro', 'Portugal', 'apires92@gmail.com', '913344556'),
+('Cris Martins', '$2b$10$uhSHBGjGk09SrY2C8/1couWzRUoObS0nI.gvz7Sdnjn1LtB6ICD0e', 'O', '1998-11-27', 'S', 'Porto', 'Portugal', 'crismartins98@outlook.com', '938899001'),
+('Rita Faria', '$2b$10$WCK4doKE735QM9YImredgui2JHHOGv2zcFUSVsQjEKkogHf31gl0y', 'F', '1987-04-14', 'M', 'Lisboa', 'Portugal', 'ritafaria87@gmail.com', '965566778'),
+('Tomás Correia', '$2b$10$.o1SQhSy32JrsydSxqmfZuDo57vfRDPFd0rFw9PXYN2D2Csm2a6SS', 'M', '2002-01-22', 'S', 'Évora', 'Portugal', 'tomas.correia02@gmail.com', '916677889'),
+('Helena Batista', '$2b$10$w1vU821NBZvPdsEXaUsR1e.92wD59J/VBssJuI2hfP93LJYuuW82G', 'F', '1973-09-05', 'W', 'Beja', 'Portugal', 'hbatista73@hotmail.com', '931122334');
+
+
 
 
 INSERT INTO posts (idUser, postDate, postText) VALUES
@@ -197,23 +231,4 @@ INSERT INTO friendship (userId, friendId, friendshipStatus, friendDate) VALUES
 (28, 29, 'F', '2024-04-14 22:30:00'),
 (29, 30, 'F', '2025-01-22 17:45:00');
 
-SELECT 
-    u1.fullName AS userName,
-    u2.fullName AS friendName,
-    f.friendshipStatus
-FROM 
-    friendship f
-JOIN 
-    users u1 ON f.userId = u1.id
-JOIN 
-    users u2 ON f.friendId = u2.id;
 
-
-
-
-
-SELECT CASE WHEN F.userId=1 THEN U2.fullName ELSE U1.fullName end as "Friends"
-FROM friendship  as F
-join users as U1 on F.userId=U1.id
-join users as U2 on F.friendId=U2.id
-WHERE (userId=1 OR friendId=1) AND friendshipStatus="F"

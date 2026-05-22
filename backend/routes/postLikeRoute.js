@@ -6,7 +6,9 @@ const authJWT = require("../middlewares/authJWT");
 
 router.post('/add', authJWT(), addLike);
 
-router.delete('/delete/:idUser/:idPost', authJWT(), removeLike);
+/*router.delete('/delete/:idUser/:idPost', authJWT(), removeLike);*/
+
+router.delete('/delete/:idPost', authJWT(), removeLike);
 
 router.get('/count/:id', authJWT(), getLikesByPost);
 

@@ -8,6 +8,10 @@ router.post('/create', authJWT(), CommentLikeController.addLike);
 
 router.get('/:id', authJWT(), CommentLikeController.getLikesByComment);
 
-router.delete('/delete/:idUser/:idComment', authJWT(), CommentLikeController.removeLike);
+router.get('/users/:id', authJWT(), CommentLikeController.getUsersLikeComment);
+
+//router.delete('/delete/:idUser/:idComment', authJWT(), CommentLikeController.removeLike);
+
+router.delete('/delete/:idComment', authJWT(), CommentLikeController.removeLike);
 
 module.exports = router;

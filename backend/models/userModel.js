@@ -28,9 +28,12 @@ const UserModel = {
     updateUser: (id, userData, callback) => {
 
         const { fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber } = userData;
-        const sql = 'UPDATE users SET fullName=?,loginPassword=?,gender=?,birthDate=?,maritalStatus=?,city=?,country=?,email=?,phoneNumber=? WHERE id=?';
 
-        db.query(sql, [fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber, id], callback);
+        let privacy = userData.privacy || 'pr';
+
+        const sql = 'UPDATE users SET fullName=?,loginPassword=?,privacy=?,gender=?,birthDate=?,maritalStatus=?,city=?,country=?,email=?,phoneNumber=? WHERE id=?';
+
+        db.query(sql, [fullName, loginPassword, privacy, gender, birthDate, maritalStatus, city, country, email, phoneNumber, id], callback);
     },
 
 

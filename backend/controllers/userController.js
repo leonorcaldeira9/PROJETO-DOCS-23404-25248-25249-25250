@@ -5,35 +5,31 @@ const jwt = require('jsonwebtoken');
 const getUserById=(req,res)=>{
     const {id} = req.params;
     UserModel.getUserById(id,(err, user)=>{
-        if(err){
-            return res.status(400).send()
+        if(err) {
+            return res.status(500).json({ error: "Database error." });
         }
         
-        if(res.affectedRows === 0) {
+        if(user.length === 0) {
             return res.status(404).json({ error: "User not found." });
         }
         
-        return res.json(user)
+        return res.status(200).json(user[0]);
     })
 }
 
 const getUsers=(req,res)=>{
     UserModel.getUsers((err,users)=>{
         if(err){
-            return res.status(400).send()
+            return res.status(500).json({ error: "Database error." });
         }
 
-        if(res.affectedRows === 0) {
-            return res.status(404).json({ error: "Users not found." });
-        }
-
-        return res.json(users)
+        return res.status(200).json(users);
     })
 }
 
 const createUser=(req,res)=>{
     if(!req.body.fullName || !req.body.loginPassword || !req.body.gender || !req.body.birthDate || !req.body.city || !req.body.country || !req.body.email || !req.body.phoneNumber) {
-        return res.status(400).send()
+        return res.status(400).json({ error: "Please fill in all required fields." })
     }
 
     const encryptSecurityLevel = 10;
@@ -74,7 +70,7 @@ const loginUser = (req, res) => {
         const user = results[0];
 
         bcrypt.compare(loginPassword, user.loginPassword, (err, isMatch) => {
-            if (err) return res.status(500).send();
+            if (err) return res.status(500).json({ error: "Error checking password." });
 
             if (isMatch) {
                 
@@ -91,11 +87,6 @@ const loginUser = (req, res) => {
             } else {
                 return res.status(401).json({ error: "Incorrect password." });
             }
-
-            if(res.affectedRows === 0) {
-                return res.status(404).json({ error: "Users not found." });
-            }
-
         });
 
 
@@ -104,42 +95,71 @@ const loginUser = (req, res) => {
 
 const updateUser = (req, res) => {
     const id=req.params.id;
+    const loggedInUserId = req.user.id;
 
-    if (id===undefined) {
+    /*if (id===undefined) {
         return res.status(400).send()
+    }*/
+
+    if (!id) {
+        return res.status(400).json({ error: "User ID is required." });
     }
+
+    if (parseInt(id) !== loggedInUserId) {
+        return res.status(403).json({ error: "Access denied: You can only update your own profile." });
+    }
+
     if(!req.body.fullName || !req.body.loginPassword || !req.body.gender || !req.body.birthDate || !req.body.maritalStatus || !req.body.city || !req.body.country || !req.body.email || !req.body.phoneNumber) {
-        return res.status(400).send()
+        return res.status(400).json({ error: "Please fill in all required fields." })
     }
-    UserModel.updateUser(id,req.body,(err,result)=>{
-        if(err){
-            return res.status(400).send()
-        }
-        if(res.affectedRows === 0) {
-            return res.status(404).json({ error: "User not found." });
-        }
 
-        return res.json("User updated successfully.")
-    })
+    const encryptSecurityLevel = 10;
 
+    bcrypt.hash(req.body.loginPassword, encryptSecurityLevel, (err, hash) => {
+        if (err) return res.status(500).json({ error: "Error checking password." });
 
+        req.body.loginPassword = hash;
+
+        UserModel.updateUser(id,req.body,(err,result)=>{
+            if(err){
+                return res.status(500).json({ error: "Error updating." });
+            }
+
+            if(result.affectedRows === 0) {
+                return res.status(404).json({ error: "User not found." });
+            }
+
+            return res.status(200).json({ message: `User ${id} updated successfully.` });
+        })
+    });
 };
 
 const deleteUser = (req, res) => {
     const  id  = req.params.id;
-    if (id===undefined) {
-        return res.status(400).send()
+    const loggedInUserId = req.user.id;
+
+    /*if (id===undefined) {
+        return res.status(400).json({ error: "User ID is required." })
+    }*/
+
+    if (!id) {
+        return res.status(400).json({ error: "User ID is required." });
     }
+
+    if (parseInt(id) !== loggedInUserId) {
+        return res.status(403).json({ error: "Access denied: You can only delete your own profile." });
+    }
+
     UserModel.deleteUser(id,(err,result)=>{
         if(err){
-            return res.status(400).send()
+            return res.status(500).json({ error: "Error deleting from the database" });
         }
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: "User not found." });
         }
 
-        return res.json("User" + id + " deleted successfully.")
+        return res.status(200).json({ message: `User ${id} deleted successfully.` });
     })
 };
 
