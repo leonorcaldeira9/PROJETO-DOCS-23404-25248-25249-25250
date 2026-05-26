@@ -26,7 +26,7 @@ const FriendshipModel = {
 
         const sqlUpdate = 'UPDATE friendship SET friendshipStatus=?, friendDate=CURRENT_TIMESTAMP WHERE userId=? AND friendId=?';
 
-        db.query(sqlUpdate, [status, friendId, userId], (err, result) => {
+        db.query(sqlUpdate, [status, userId, friendId], (err, result) => {
             if (err) return callback(err, null);
 
             if (result.affectedRows === 0) return callback(null, result);
@@ -39,7 +39,7 @@ const FriendshipModel = {
                     ON DUPLICATE KEY UPDATE friendshipStatus=?, friendDate=CURRENT_TIMESTAMP
                 `;
 
-                db.query(sqlInsertReverse, [userId, friendId, status, status], (errReverse, resultReverse) => {
+                db.query(sqlInsertReverse, [friendId, userId, status, status], (errReverse, resultReverse) => {
                     if (errReverse) return callback(errReverse, null);
 
 
@@ -77,6 +77,11 @@ const FriendshipModel = {
             }
         });
     },
+
+    getPendingRequests: (idUser, callback) => {
+        const sql = 'SELECT U.id, U.fullName, U.email, F.friendDate FROM friendship AS F JOIN users AS U ON U.id = F.userId AND U.id != ? WHERE ( F.friendId = ?) AND F.friendshipStatus = "P"';
+        db.query(sql, [idUser, idUser], callback);
+    }
 };
 
 module.exports = FriendshipModel;

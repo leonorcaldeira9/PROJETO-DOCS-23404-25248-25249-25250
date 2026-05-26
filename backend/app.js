@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 
 const PORT = 3001;
 
@@ -16,6 +17,8 @@ const friendShipRouter = require('./routes/friendShipRoute');
 const postLikeRouter = require('./routes/postLikeRoute');
 
 const app = express();
+
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

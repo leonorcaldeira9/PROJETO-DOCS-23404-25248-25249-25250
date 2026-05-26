@@ -29,6 +29,11 @@ const PostModel = {
     deletePost: (id, callback) => {
         const sql = 'DELETE FROM posts WHERE id=?';
         db.query(sql, [id], callback);
+    },
+
+    getFeed: (idUser, callback) => {
+        const sql = 'SELECT posts.*, users.fullName FROM posts JOIN users ON posts.idUser = users.id WHERE posts.idUser = ? OR posts.idUser IN (SELECT friendId FROM friendship WHERE userId = ? AND friendshipStatus = "F") ORDER BY posts.postDate DESC'
+        db.query(sql, [idUser, idUser], callback);
     }
 };
 

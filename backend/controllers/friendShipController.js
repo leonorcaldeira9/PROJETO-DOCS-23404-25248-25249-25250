@@ -45,6 +45,18 @@ const getFriendsByUser = (req, res) => {
     });
 };
 
+const getFriendsRequests = (req, res) => {
+    const idLoggedInUser = req.user.id;
+
+    FriendshipModel.getPendingRequests(idLoggedInUser, (err, requests) => {
+        if (err) {
+            return res.status(500).json({ error: "Error searching for pending friend requests." });
+        }
+
+        return res.status(200).json(requests);
+    });
+}
+
 const createFriendRequest = (req, res) => {
     /*const { userId, friendId } = req.body;
     if (!userId || !friendId) return res.status(400).send();*/
@@ -130,5 +142,6 @@ module.exports = {
     getFriendsByUser,
     createFriendRequest,
     updateFriendshipStatus,
-    deleteFriendship
+    deleteFriendship,
+    getFriendsRequests
 };

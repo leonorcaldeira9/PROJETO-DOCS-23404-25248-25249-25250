@@ -1,10 +1,11 @@
 const PostLikeModel = require('../models/PostLikeModel');
 const {getPostById} = require("../models/postModel");
 const {checkIfFriends} = require("../models/friendShipModel");
+const {verifyPostAccess} = require("../utils/securityHelper");
 
 
 
-const addLike = (req, res) => {
+/*const addLike = (req, res) => {
     const idUser = req.user.id;
     const { idPost } = req.body;
 
@@ -42,6 +43,24 @@ const addLike = (req, res) => {
         } else {
             addLikeFunc();
         }
+    });
+};*/
+
+const addLike = (req, res) => {
+    const idUser = req.user.id;
+    const { idPost } = req.body;
+
+    if (!idPost) {
+        return res.status(400).json({ error: "The post ID is required." });
+    }
+
+    verifyPostAccess(idPost, idUser, res, (targetPost) => {
+        PostLikeModel.addLike(idUser, idPost, (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: "Error adding like." });
+            }
+            return res.status(201).json({ message: "Like added successfully." });
+        });
     });
 };
 

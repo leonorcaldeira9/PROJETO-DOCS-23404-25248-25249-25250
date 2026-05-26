@@ -22,7 +22,7 @@ create table posts (
     idUser int NOT NULL,
     postDate datetime DEFAULT CURRENT_TIMESTAMP,
     postText text,
-    visibility nchar(2) CHECK (visibility = 'pu' OR visibility = 'pr') DEFAULT 'pr',
+    visibility nchar(2) CHECK (visibility = 'pu' OR visibility = 'pr') DEFAULT 'pr' NOT NULL,
     FOREIGN KEY (idUser) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -250,5 +250,3 @@ INSERT INTO friendship (userId, friendId, friendshipStatus, friendDate) VALUES
 (29, 28, 'F', '2024-04-14 22:30:00'),
 (29, 30, 'F', '2025-01-22 17:45:00'),
 (30, 29, 'F', '2025-01-22 17:45:00');
-
-

@@ -1,6 +1,7 @@
 const PostModel = require('../models/postModel');
 const {checkIfFriends} = require("../models/friendShipModel");
 const {getUserById} = require("../models/userModel");
+const {verifyPostAccess} = require("../utils/securityHelper");
 
 /*const getPostById = (req, res) => {
     const id = req.params.id;
@@ -20,12 +21,10 @@ const {getUserById} = require("../models/userModel");
     });
 };*/
 
-const getPostById = (req, res) => {
+/*const getPostById = (req, res) => {
     const id = req.params.id;
     const idLoggedInUser = req.user.id;
-    /*if (id === undefined) {
-        return res.status(400).send();
-    }*/
+
 
     if (!id) {
         return res.status(400).json({ error: "User ID is required." });
@@ -65,6 +64,19 @@ const getPostById = (req, res) => {
                 return res.status(200).json(targetPost);
             }
         });
+    });
+};*/
+
+const getPostById = (req, res) => {
+    const id = req.params.id;
+    const idLoggedInUser = req.user.id;
+
+    if (!id) {
+        return res.status(400).json({ error: "User ID is required." });
+    }
+
+    verifyPostAccess(id, idLoggedInUser, res, (targetPost) => {
+        return res.status(200).json(targetPost);
     });
 };
 
@@ -138,6 +150,18 @@ const getPosts = (req, res) => {
         return res.status(200).json(posts);
     });
 };
+
+const getPostsFeed = (req, res) => {
+    const idLoggedInUser = req.user.id;
+
+    PostModel.getFeed(idLoggedInUser, (err, posts) => {
+        if(err){
+            return res.status(500).json({ error: "Database error fetching the feed." });
+        }
+
+        return res.status(200).json(posts);
+    });
+}
 
 const createPost = (req, res) => {
     const idUser = req.user.id;
@@ -242,5 +266,6 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
-    getPostsByUser
+    getPostsByUser,
+    getPostsFeed
 };
