@@ -25,7 +25,7 @@ const UserModel = {
     },
 
 
-    updateUser: (id, userData, callback) => {
+    /*updateUser: (id, userData, callback) => {
 
         const { fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber } = userData;
 
@@ -34,6 +34,24 @@ const UserModel = {
         const sql = 'UPDATE users SET fullName=?,loginPassword=?,privacy=?,gender=?,birthDate=?,maritalStatus=?,city=?,country=?,email=?,phoneNumber=? WHERE id=?';
 
         db.query(sql, [fullName, loginPassword, privacy, gender, birthDate, maritalStatus, city, country, email, phoneNumber, id], callback);
+    },*/
+
+    updateUser: (id, userData, callback) => {
+
+        const { fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber } = userData;
+
+        let privacy = userData.privacy || 'pr';
+        if(loginPassword !== null || loginPassword !== undefined){
+            const sql = 'UPDATE users SET fullName=?,loginPassword=?,privacy=?,gender=?,birthDate=?,maritalStatus=?,city=?,country=?,email=?,phoneNumber=? WHERE id=?';
+
+            db.query(sql, [fullName, loginPassword, privacy, gender, birthDate, maritalStatus, city, country, email, phoneNumber, id], callback);
+        }
+        else{
+            const sql = 'UPDATE users SET fullName=?,privacy=?,gender=?,birthDate=?,maritalStatus=?,city=?,country=?,email=?,phoneNumber=? WHERE id=?';
+
+            db.query(sql, [fullName, privacy, gender, birthDate, maritalStatus, city, country, email, phoneNumber, id], callback);
+        }
+
     },
 
 
