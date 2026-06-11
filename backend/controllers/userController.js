@@ -111,11 +111,39 @@ const updateUser = (req, res) => {
         return res.status(403).json({ error: "Access denied: You can only update your own profile." });
     }
 
-    if(!req.body.fullName || !req.body.loginPassword || !req.body.gender || !req.body.birthDate || !req.body.maritalStatus || !req.body.city || !req.body.country || !req.body.email || !req.body.phoneNumber) {
+    if(!req.body.fullName || !req.body.gender || !req.body.birthDate || !req.body.maritalStatus || !req.body.city || !req.body.country || !req.body.email || !req.body.phoneNumber) {
         return res.status(400).json({ error: "Please fill in all required fields." })
     }
 
-    const encryptSecurityLevel = 10;
+    if (req.body.loginPassword) {
+        const encryptSecurityLevel = 10;
+
+        bcrypt.hash(req.body.loginPassword, encryptSecurityLevel, (err, hash) => {
+            if (err) return res.status(500).json({ error: "Error checking password." });
+
+            req.body.loginPassword = hash;
+
+            UserModel.updateUser(id, req.body, (err, result) => {
+                if(err) return res.status(500).json({ error: "Error updating." });
+                if(result.affectedRows === 0) return res.status(404).json({ error: "User not found." });
+
+                return res.status(200).json({ message: `User ${id} updated successfully.` });
+            });
+        });
+    }
+    else {
+        UserModel.updateUser(id, req.body, (err, result) => {
+            if(err) return res.status(500).json({ error: "Error updating." });
+            if(result.affectedRows === 0) return res.status(404).json({ error: "User not found." });
+
+            return res.status(200).json({ message: `User ${id} updated successfully.` });
+        });
+    }
+
+
+
+
+    /*const encryptSecurityLevel = 10;
 
     bcrypt.hash(req.body.loginPassword, encryptSecurityLevel, (err, hash) => {
         if (err) return res.status(500).json({ error: "Error checking password." });
@@ -133,7 +161,7 @@ const updateUser = (req, res) => {
 
             return res.status(200).json({ message: `User ${id} updated successfully.` });
         })
-    });
+    });*/
 };
 
 const deleteUser = (req, res) => {

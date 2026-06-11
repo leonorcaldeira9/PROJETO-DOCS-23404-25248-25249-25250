@@ -41,7 +41,7 @@ const UserModel = {
         const { fullName, loginPassword, gender, birthDate, maritalStatus, city, country, email, phoneNumber } = userData;
 
         let privacy = userData.privacy || 'pr';
-        if(loginPassword !== null || loginPassword !== undefined){
+        if(loginPassword){
             const sql = 'UPDATE users SET fullName=?,loginPassword=?,privacy=?,gender=?,birthDate=?,maritalStatus=?,city=?,country=?,email=?,phoneNumber=? WHERE id=?';
 
             db.query(sql, [fullName, loginPassword, privacy, gender, birthDate, maritalStatus, city, country, email, phoneNumber, id], callback);
