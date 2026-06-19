@@ -57,6 +57,18 @@ const getFriendsRequests = (req, res) => {
     });
 }
 
+const getBlockedUsersByUser = (req, res) => {
+    const idLoggedInUser = req.user.id;
+
+    FriendshipModel.getBlockedUsers(idLoggedInUser, (err, blocked) => {
+        if (err) {
+            return res.status(500).json({ error: "Error searching for blocked users." });
+        }
+
+        return res.status(200).json(blocked);
+    });
+};
+
 const createFriendRequest = (req, res) => {
     /*const { userId, friendId } = req.body;
     if (!userId || !friendId) return res.status(400).send();*/
@@ -80,12 +92,8 @@ const createFriendRequest = (req, res) => {
     });
 };
 
-const updateFriendshipStatus = (req, res) => {
+/*const updateFriendshipStatus = (req, res) => {
 
-    /*const { userId, friendId, friendshipStatus } = req.body;
-    if (!userId || !friendId || !friendshipStatus) return res.status(400).send("Este erro ao update status");*/
-
-    //const userId = req.user.id;
     const userWithRequestId = req.user.id;
     const { friendId, friendshipStatus } = req.body;
 
@@ -108,6 +116,38 @@ const updateFriendshipStatus = (req, res) => {
 
         return res.status(200).json({ message: `Friendship status updated to ${friendshipStatus}.` });
     });
+};*/
+
+const updateFriendshipStatus = (req, res) => {
+    const userWithRequestId = req.user.id;
+    const { friendId, friendshipStatus } = req.body;
+
+    if (!friendId || !friendshipStatus) {
+        return res.status(400).json({ error: "The friend's ID and friendship status are required." });
+    }
+
+    if (userWithRequestId === parseInt(friendId)) {
+        return res.status(400).json({ error: "You cannot change the state of your friendship with yourself." });
+    }
+
+    if (friendshipStatus === 'B') {
+        FriendshipModel.blockUser(userWithRequestId, friendId, (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: "Error blocking user." });
+            }
+            return res.status(200).json({ message: "User blocked successfully." });
+        });
+    } else {
+        FriendshipModel.updateFriendshipStatus(friendId, userWithRequestId, friendshipStatus, (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: "Error updating friendship status." });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: "Friendship request not found." });
+            }
+            return res.status(200).json({ message: `Friendship status updated to ${friendshipStatus}.` });
+        });
+    }
 };
 
 const deleteFriendship = (req, res) => {
@@ -144,5 +184,6 @@ module.exports = {
     createFriendRequest,
     updateFriendshipStatus,
     deleteFriendship,
-    getFriendsRequests
+    getFriendsRequests,
+    getBlockedUsersByUser
 };

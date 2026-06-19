@@ -3,14 +3,13 @@ import {Link, useNavigate} from 'react-router-dom';
 
 
 const SettingsMenu = ({ onLogout }) => {
-    // State to control the visibility of the settings dropdown
     const [isOpen, setIsOpen] = useState(false);
 
-    // Reference to detect clicks outside the settings menu
+
     const menuRef = useRef(null);
     const navigate = useNavigate();
 
-    // Close the dropdown if the user clicks outside of it
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -24,18 +23,18 @@ const SettingsMenu = ({ onLogout }) => {
         };
     }, []);
 
-    // Toggles the settings menu open/closed
+
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
-    // Navigates to the edit profile page
+
     const handleEditProfile = () => {
         setIsOpen(false);
         navigate('/edit-profile');
     };
 
-    // Handles the account deletion process
+
     const handleDeleteAccount = () => {
         setIsOpen(false);
 
@@ -44,7 +43,7 @@ const SettingsMenu = ({ onLogout }) => {
         if (confirmDelete) {
 
             console.log("Account deleted locally for testing.");
-            onLogout(); // Triggers the logout function passed from Navbar
+            onLogout();
         }
     };
 
@@ -56,7 +55,7 @@ const SettingsMenu = ({ onLogout }) => {
                 <i className="bi bi-gear fs-3 text-secondary"></i>
             </button>
 
-            {/* Dropdown Menu */}
+
             {isOpen && (
                 <div className="dropdown-menu show position-absolute end-0 mt-2 shadow-sm" style={{ minWidth: '200px' }}>
                     {/*<button className="dropdown-item d-flex align-items-center" onClick={handleEditProfile}>*/}
@@ -68,6 +67,16 @@ const SettingsMenu = ({ onLogout }) => {
                         onClick={() => setIsOpen(false)}
                     >
                         <i className="bi bi-pencil-square me-2 text-secondary"></i> Edit Profile
+                    </Link>
+
+                    <div className="dropdown-divider"></div>
+
+                    <Link
+                        to="/settings"
+                        className="dropdown-item d-flex align-items-center text-decoration-none"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <i className="bi bi-gear me-2 text-secondary"></i>Settings
                     </Link>
 
                     <div className="dropdown-divider"></div>

@@ -7,7 +7,8 @@ const {
     createFriendRequest,
     updateFriendshipStatus,
     deleteFriendship,
-    getFriendsRequests
+    getFriendsRequests,
+    getBlockedUsersByUser
 } = require('../controllers/friendshipController');
 const authJWT = require("../middlewares/authJWT");
 
@@ -16,6 +17,8 @@ const authJWT = require("../middlewares/authJWT");
 router.get('/requests/pending', authJWT(), getFriendsRequests);
 
 router.get('/status/:friendId', authJWT(), getFriendshipStatus);
+
+router.get('/blocked', authJWT(), getBlockedUsersByUser);
 
 router.get('/user/:id', authJWT(), getFriendsByUser);
 

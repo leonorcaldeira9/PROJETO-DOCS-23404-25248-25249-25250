@@ -8,7 +8,6 @@ const EditProfile = () => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
-    // State holding all user fields, including privacy and maritalStatus
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -18,7 +17,7 @@ const EditProfile = () => {
         city: '',
         country: '',
         phoneNumber: '',
-        maritalStatus: '', // Ready to be updated by the user UI
+        maritalStatus: '',
         privacy: ''
     });
 
@@ -26,7 +25,6 @@ const EditProfile = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
 
-    // Fetch user data to pre-fill the form
     useEffect(() => {
         if (!token) {
             navigate('/login');
@@ -39,13 +37,10 @@ const EditProfile = () => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-
                 const userData = response.data;
-
 
                 console.log("DEBUG: Fetched User Data ->", userData);
 
-                // Pre-fill state with existing data.
                 setFormData({
                     fullName: userData.fullName || '',
                     email: userData.email || '',
@@ -70,7 +65,6 @@ const EditProfile = () => {
         fetchUserData();
     }, [token, userId, navigate]);
 
-    // Handle input changes
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -118,16 +112,13 @@ const EditProfile = () => {
             console.log("DEBUG: Full Error Object ->", error);
 
             if (error.response) {
-                // O backend respondeu com um erro (ex: 400, 404, 500)
                 console.log("Status Code:", error.response.status);
                 console.log("Error Data:", error.response.data);
                 setMessage({ text: 'Erro ao salvar as alterações. Verifica os dados.', type: 'danger' });
             } else if (error.request) {
-                // O pedido foi feito, mas não houve qualquer resposta do servidor
                 console.log("DEBUG: No response received. Check if backend is running on port 3001.");
                 setMessage({ text: 'O servidor não respondeu. Verifica se o backend está ligado.', type: 'danger' });
             } else {
-                // Alguma coisa correu mal a montar o próprio pedido
                 console.log("DEBUG: Request Setup Error ->", error.message);
                 setMessage({ text: 'Erro interno ao preparar o pedido.', type: 'danger' });
             }

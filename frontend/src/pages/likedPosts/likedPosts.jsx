@@ -47,7 +47,7 @@ const LikedPosts = () => {
                 })
             );
 
-            // 3. Guarda os posts (agora já com os nomes incluídos!) no State
+
             setLikedPosts(postsWithUsers);
 
         } catch (error) {

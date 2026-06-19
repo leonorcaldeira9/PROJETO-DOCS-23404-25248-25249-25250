@@ -59,7 +59,7 @@ const Register = () => {
                 });
 
             } else {
-                //console.error("Error communicating with the server:", error);
+
 
                 setModal({
                     isOpen: true,

@@ -14,12 +14,29 @@ const FriendshipModel = {
         db.query(sql, [userId], callback);
     },
 
-
-    createFriendRequest: (userId, friendId, callback) => {
-        const sql = 'INSERT INTO friendship (userId, friendId, friendshipStatus) VALUES (?, ?, "P")';
-        db.query(sql, [userId, friendId], callback);
+    getBlockedUsers: (userId, callback) => {
+        const sql = `SELECT U.id, U.fullName FROM users AS U JOIN friendship AS F ON U.id = F.friendId WHERE F.userId = ? AND F.friendshipStatus = 'B' AND F.userId != F.friendId`;
+        db.query(sql, [userId], callback);
     },
 
+    /*createFriendRequest: (userId, friendId, callback) => {
+        const sql = 'INSERT INTO friendship (userId, friendId, friendshipStatus) VALUES (?, ?, "P")';
+        db.query(sql, [userId, friendId], callback);
+    },*/
+
+    createFriendRequest: (userId, friendId, callback) => {
+        const checkBlockSql = `SELECT * FROM friendship WHERE userId=? AND friendId=? AND friendshipStatus='B'`;
+        db.query(checkBlockSql, [friendId, userId], (err, rows) => {
+            if (err) return callback(err, null);
+
+            if (rows.length > 0) {
+                return callback(new Error("You are blocked by this user."), null);
+            }
+
+            const sql = `INSERT INTO friendship (userId, friendId, friendshipStatus) VALUES (?, ?, 'P')`;
+            db.query(sql, [userId, friendId], callback);
+        });
+    },
 
     updateFriendshipStatus: (userId, friendId, status, callback) => {
 
@@ -52,6 +69,20 @@ const FriendshipModel = {
         });
     },
 
+    blockUser: (userId, friendId, callback) => {
+        const sqlDeleteReverse = 'DELETE FROM friendship WHERE userId=? AND friendId=?';
+
+        db.query(sqlDeleteReverse, [friendId, userId], (err) => {
+            if (err) return callback(err, null);
+
+            const sqlBlock = `
+                INSERT INTO friendship (userId, friendId, friendshipStatus, friendDate) 
+                VALUES (?, ?, 'B', CURRENT_TIMESTAMP) 
+                ON DUPLICATE KEY UPDATE friendshipStatus='B', friendDate=CURRENT_TIMESTAMP
+            `;
+            db.query(sqlBlock, [userId, friendId], callback);
+        });
+    },
 
     deleteFriendship: (user1, user2, callback) => {
         const sql = 'DELETE FROM friendship WHERE (userId=? AND friendId=?) OR (userId=? AND friendId=?)';

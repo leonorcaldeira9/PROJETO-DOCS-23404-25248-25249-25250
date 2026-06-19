@@ -52,7 +52,7 @@ const CommentItem = ({ comment, allComments, isReply = false, postDate, currentU
 
     useEffect(() => {
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+
         fetchCommentsLikes();
     }, [fetchCommentsLikes]);
 
@@ -278,7 +278,7 @@ const PostPage = () => {
 
     useEffect(() => {
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+
         fetchPostData();
     }, [fetchPostData]);
 

@@ -39,16 +39,25 @@ const Notifications = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
+            const blockedRes = await axios.get(`http://localhost:3001/friendShip/blocked`, {
+                headers: { Authorization: `Bearer ${token}` }
+            }).catch(err => {
+                console.error("Error fetching blocked users:", err);
+                return { data: [] };
+            });
+
             const allUsers = usersRes.data;
             const myFriends = friendsRes.data;
             const pendingRequests = requestsRes.data;
+            const blockedUsers = blockedRes.data || [];
 
             let filteredUsers = allUsers.filter(user => {
                 const isSelf = String(user.id) === String(currentUserId);
                 const isAlreadyFriend = myFriends.some(friend => String(friend.id) === String(user.id));
                 const isPendingRequest = pendingRequests.some(req => String(req.id) === String(user.id));
+                const isBlocked = blockedUsers.some(blockedUser => String(blockedUser.id) === String(user.id));
 
-                return !isSelf && !isAlreadyFriend && !isPendingRequest;
+                return !isSelf && !isAlreadyFriend && !isPendingRequest && !isBlocked;
             });
 
             setPotentialFriends(filteredUsers);
@@ -59,7 +68,6 @@ const Notifications = () => {
     }, [token, currentUserId]);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
     }, [fetchData]);
 

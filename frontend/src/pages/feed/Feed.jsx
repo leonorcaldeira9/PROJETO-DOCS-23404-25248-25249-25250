@@ -65,7 +65,7 @@ const Feed = () => {
             return;
         }
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+
         fetchFeed();
 
     }, [navigate, token, fetchFeed]);

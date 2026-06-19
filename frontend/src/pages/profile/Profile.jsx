@@ -304,8 +304,19 @@ import './profile.css';
 import { useCallback, useEffect, useState } from "react";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Navbar from "../../components/navBar/navBar.jsx";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PostCard from "../../components/postCard/postCard.jsx";
+
+const formatData = (dataString) => {
+    if (!dataString) return '';
+
+    const data = new Date(dataString);
+    const day = String(data.getDate()).padStart(2, '0');
+    const month = String(data.getMonth() + 1).padStart(2, '0');
+    const year = data.getFullYear();
+
+    return `${day}/${month}/${year}`;
+};
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
@@ -324,7 +335,7 @@ const Profile = () => {
 
     const [posts, setPosts] = useState([]);
 
-    // O state da relação (none, P, F, B)
+
     const [relation, setRelation] = useState('none');
 
     const fetchUserData = useCallback(async () => {
@@ -371,7 +382,7 @@ const Profile = () => {
         }
     }, [profileUserId, token, userId]);
 
-    // 1. FUNÇÃO: ENVIAR PEDIDO DE AMIZADE
+
     const handleSendRequest = async () => {
         try {
             await axios.post('http://localhost:3001/friendShip/request',
@@ -385,10 +396,10 @@ const Profile = () => {
         }
     };
 
-    // 2. FUNÇÃO: REMOVER AMIGO ou CANCELAR PEDIDO
+
     const handleRemoveFriend = async () => {
         try {
-            // ⚠️ Troquei as aspas simples (') por backticks (`) e mudei para axios.delete
+
             await axios.delete(`http://localhost:3001/friendShip/delete/${profileUserId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -419,6 +430,21 @@ const Profile = () => {
         }
     };
 
+    const handleUnblockUser = async () => {
+        try {
+            await axios.delete(`http://localhost:3001/friendShip/delete/${profileUserId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+
+            });
+
+            setRelation('none');
+
+        } catch (error) {
+            console.error("Error unblocking user:", error);
+            alert("Error trying to unblock.");
+        }
+    };
+
     useEffect(() => {
         if (!token) {
             navigate('/login');
@@ -438,12 +464,12 @@ const Profile = () => {
     }
 
     return (
-        <div className="background">
+        <div className="background d-flex flex-column">
             <Navbar />
 
-            <div className="card shadow-sm border-0 mt-5 w-100 mx-auto profile-card" style={{ maxWidth: '800px' }}>
+            <div className="card shadow-sm border-0 mt-5 mb-5 w-100 mx-auto profile-card">
                 <div className="banner"></div>
-                <div className="px-4 ">
+                <div className="px-4">
                     <div className="userCircle d-flex align-items-center justify-content-center overflow-hidden bg-light shadow-sm position-absolute">
                         {(!profileUserId || imageError) ? (
                             <i className="bi bi-person-circle text-secondary w-100 h-100 d-flex align-items-center justify-content-center default-icon"></i>
@@ -458,73 +484,67 @@ const Profile = () => {
                         )}
                     </div>
 
-                    <div className="pb-4 sub-card" style={{ paddingTop: '60px' }}>
+
+                    <div className="sub-card" style={{ paddingTop: '20px' }}>
                         <h3 className="mb-0 fw-bold mx-2">{userData?.fullName || 'Anonymous'}</h3>
-                        <p className="mb-0 text-muted mx-2">
+                        <p className="mb-0 text-muted mx-2 mt-3">
                             <i className="bi bi-geo-alt-fill me-1"></i>
                             {userData?.city || 'Location unknown'}
                         </p>
+                        <p className="mb-0 text-muted mx-2">
+                            <i className="bi bi-cake me-1"></i>
+                            {formatData(userData?.birthDate)}
+                        </p>
                     </div>
 
-                    {/* --- BOTÕES DE RELAÇÃO / AMIZADE --- */}
-                    <div className="mt-2 mx-2 d-flex gap-2 mb-4">
-                        {String(profileUserId) === String(userId) ? (
-                            <Link to="/edit-profile">
-                                <button className="btn btn-outline-secondary btn-sm fw-semibold">
-                                    <i className="bi bi-gear-fill me-1"></i> Edit Profile
-                                </button>
-                            </Link>
-                        ) : (
-                            <>
-                                {/* SE SÃO AMIGOS */}
-                                {relation === 'F' && (
-                                    <>
-                                        <button className="btn btn-success btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
-                                            <i className="bi bi-check-lg"></i> Friends
-                                        </button>
-                                        <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleRemoveFriend}>
-                                            <i className="bi bi-person-x-fill"></i> Unfriend
-                                        </button>
-                                        <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1" onClick={handleBlockUser}>
-                                            <i className="bi bi-slash-circle"></i> Block
-                                        </button>
-                                    </>
-                                )}
-
-                                {/* SE HÁ PEDIDO PENDENTE */}
-                                {relation === 'P' && (
-                                    <>
-                                        <button className="btn btn-warning text-dark btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
-                                            <i className="bi bi-clock-history"></i> Pending Request
-                                        </button>
-                                        <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleRemoveFriend}>
-                                            <i className="bi bi-x-circle-fill"></i> Cancel
-                                        </button>
-                                    </>
-                                )}
-
-                                {/* SE NÃO HÁ RELAÇÃO NENHUMA */}
-                                {relation === 'none' && (
-                                    <>
-                                        <button className="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleSendRequest}>
-                                            <i className="bi bi-person-plus-fill"></i> Add Friend
-                                        </button>
-                                        <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1" onClick={handleBlockUser}>
-                                            <i className="bi bi-slash-circle"></i> Block
-                                        </button>
-                                    </>
-                                )}
-
-                                {/* SE ESTÁ BLOQUEADO */}
-                                {relation === 'B' && (
-                                    <button className="btn btn-danger btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
-                                        <i className="bi bi-slash-circle"></i> Blocked User
+                    {profileUserId !== userId && (
+                        <div className="mt-2 mx-2 d-flex gap-2 mb-4">
+                            {relation === 'F' && (
+                                <>
+                                    <button className="btn btn-success btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
+                                        <i className="bi bi-check-lg"></i> Friends
                                     </button>
-                                )}
-                            </>
-                        )}
-                    </div>
-                    {/* --------------------------------- */}
+                                    <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleRemoveFriend}>
+                                        <i className="bi bi-person-x-fill"></i> Unfriend
+                                    </button>
+                                    <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1" onClick={handleBlockUser}>
+                                        <i className="bi bi-slash-circle"></i> Block
+                                    </button>
+                                </>
+                            )}
+
+                            {relation === 'P' && (
+                                <>
+                                    <button className="btn btn-warning text-dark btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
+                                        <i className="bi bi-clock-history"></i> Pending Request
+                                    </button>
+                                    <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleRemoveFriend}>
+                                        <i className="bi bi-x-circle-fill"></i> Cancel
+                                    </button>
+                                </>
+                            )}
+
+                            {relation === 'none' && (
+                                <>
+                                    <button className="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleSendRequest}>
+                                        <i className="bi bi-person-plus-fill"></i> Add Friend
+                                    </button>
+                                    <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1" onClick={handleBlockUser}>
+                                        <i className="bi bi-slash-circle"></i> Block
+                                    </button>
+                                </>
+                            )}
+
+                            {relation === 'B' && (
+                                <button
+                                    className="btn btn-danger btn-sm fw-semibold d-flex align-items-center gap-1"
+                                    onClick={handleUnblockUser}
+                                >
+                                    <i className="bi bi-unlock-fill"></i> Unblock User
+                                </button>
+                            )}
+                        </div>
+                    )}
 
                     <hr className="text-muted opacity-25" />
 
@@ -532,7 +552,7 @@ const Profile = () => {
                         <h5 className="mb-3 fw-bold text-dark px-2">Timeline</h5>
 
                         {posts.length === 0 ? (
-                            <div className="card shadow-sm border-0 p-5 text-center bg-light">
+                            <div className="card shadow-sm border-0 p-5 text-center bg-light mb-4">
                                 <i className="bi bi-journal-x fs-1 text-muted mb-2"></i>
                                 <p className="text-muted fw-semibold mb-0">No posts available.</p>
                             </div>
