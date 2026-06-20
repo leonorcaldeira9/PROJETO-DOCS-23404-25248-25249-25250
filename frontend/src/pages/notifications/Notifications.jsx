@@ -92,6 +92,7 @@ const Notifications = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             fetchData();
+            window.dispatchEvent(new Event('notificationsUpdate'));
         } catch (error) {
             console.error("Error acepting friend request:", error);
         }
@@ -103,6 +104,7 @@ const Notifications = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchData();
+            window.dispatchEvent(new Event('notificationsUpdate'));
         } catch (error) {
             console.error("Error declining friend request:", error);
         }

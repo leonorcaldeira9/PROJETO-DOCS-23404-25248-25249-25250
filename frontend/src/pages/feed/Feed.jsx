@@ -2,7 +2,7 @@ import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import './feed.css';
 import {useCallback, useEffect, useState} from "react";
-//import AlertModal from "../../components/alertModal.jsx";
+import AlertModal from "../../components/alertModal/alertModal.jsx";
 import Navbar from "../../components/navBar/navBar.jsx";
 import ListFriends from "../../components/listFriends/listFriends.jsx";
 import ListOptions from "../../components/listOptions/listOptions.jsx";
@@ -16,6 +16,18 @@ const Feed = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+
+    const [modal, setModal] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: ''
+    });
+
+    const closeModal = () => {
+        setModal({ ...modal, isOpen: false });
+    };
+
 
     const fetchFeed = useCallback(async () => {
 
@@ -54,7 +66,12 @@ const Feed = () => {
 
         } catch (error) {
             console.error("Error creating post:", error);
-            alert("Não foi possível criar o post. Tenta novamente!");
+            setModal({
+                isOpen: true,
+                title: 'Create Failed',
+                message: "It was not possible to create the post. Please try again.",
+                type: 'error'
+            });
         }
     };
 
@@ -76,7 +93,7 @@ const Feed = () => {
         <div className="feed">
             <Navbar/>
 
-            <div className="container mt-4">
+            <div className="container mt-5">
 
                 <div className="row gx-5">
 
@@ -145,7 +162,7 @@ const Feed = () => {
                             <p className="text-center text-muted">There are no posts in your feed yet.</p>
                         ) : (
                             posts.map((post) => (
-                                <PostCard key={post.id} post={post} token={token}/>
+                                <PostCard key={post.id} post={post} token={token} onPostUpdate={fetchFeed}/>
                             ))
                         )}
                     </div>
@@ -155,6 +172,13 @@ const Feed = () => {
                     </div>
                 </div>
             </div>
+            <AlertModal
+                isOpen={modal.isOpen}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+                onClose={closeModal}
+            />
         </div>
     );
 };

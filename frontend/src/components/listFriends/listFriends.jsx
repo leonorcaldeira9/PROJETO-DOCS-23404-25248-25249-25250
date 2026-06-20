@@ -97,9 +97,7 @@ const FriendsListWidget = () => {
                                 </div>
 
                             </Link>
-                            <span className="badge bg-success rounded-circle p-1 friendOnline" >
-                                <span className="visually-hidden">Online</span>
-                            </span>
+
                         </div>
                     ))
                 )}

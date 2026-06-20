@@ -27,7 +27,11 @@ const PendingRelationshipPage = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            setPendingList(pendingResponse.data || []);
+            const allPending = pendingResponse.data || [];
+
+            const sentRequests = allPending.filter(req => String(req.senderId) === String(userId));
+
+            setPendingList(sentRequests);
 
             const blockedResponse = await axios.get(`http://localhost:3001/friendShip/blocked`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -54,7 +58,7 @@ const PendingRelationshipPage = () => {
     const handleRemoveConnection = async (targetUserId, type) => {
         const message = type === 'block'
             ? "Are you sure you want to unblock this user?"
-            : "Are you sure you want to reject this friend request?";
+            : "Are you sure you want to cancel this friend request?";
 
         if (!window.confirm(message)) return;
 
@@ -72,24 +76,6 @@ const PendingRelationshipPage = () => {
         } catch (error) {
             console.error(`Error removing connection (${type}):`, error);
             alert("An error occurred. Try again.");
-        }
-    };
-
-
-    const handleAcceptRequest = async (senderId) => {
-        try {
-
-            await axios.put('http://localhost:3001/friendShip/update',
-                { friendId: senderId, friendshipStatus: 'F' },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-
-
-            setPendingList(prev => prev.filter(user => user.id !== senderId));
-            alert("Friend request accepted!");
-        } catch (error) {
-            console.error("Error accepting friend request:", error);
-            alert("Error trying to accept request.");
         }
     };
 
@@ -133,7 +119,7 @@ const PendingRelationshipPage = () => {
                                     {pendingList.map((user) => (
                                         <div key={user.id} className="list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-center py-3 border rounded shadow-sm gap-3">
 
-                                            <div className="d-flex align-items-center cursor-pointer" onClick={() => navigate(`/profile/${user.id}`)} style={{ cursor: 'pointer' }}>
+                                            <div className="d-flex align-items-center cursor-pointer" onClick={() => navigate(`/profile/${user.id}`)}>
                                                 <div className="rounded-circle overflow-hidden bg-light border me-3 d-flex justify-content-center align-items-center flex-shrink-0" style={{ width: '45px', height: '45px' }}>
                                                     <img
                                                         src={`/users/${user.id}.png`}
@@ -150,11 +136,8 @@ const PendingRelationshipPage = () => {
                                             </div>
 
                                             <div className="d-flex gap-2 w-100 w-sm-auto justify-content-end">
-                                                <button onClick={() => handleAcceptRequest(user.id)} className="btn btn-success btn-sm fw-semibold flex-grow-1 flex-sm-grow-0">
-                                                    Accept
-                                                </button>
                                                 <button onClick={() => handleRemoveConnection(user.id, 'pending')} className="btn btn-outline-danger btn-sm fw-semibold flex-grow-1 flex-sm-grow-0">
-                                                    Reject
+                                                    Cancel
                                                 </button>
                                             </div>
                                         </div>
@@ -181,7 +164,7 @@ const PendingRelationshipPage = () => {
                                     {blockedList.map((user) => (
                                         <div key={user.id} className="list-group-item d-flex justify-content-between align-items-center py-3 border rounded shadow-sm gap-2">
 
-                                            <div className="d-flex align-items-center">
+                                            <div className="d-flex align-items-center cursor-pointer" onClick={() => navigate(`/profile/${user.id}`)}>
                                                 <div className="rounded-circle overflow-hidden bg-light border me-3 d-flex justify-content-center align-items-center flex-shrink-0" style={{ width: '45px', height: '45px' }}>
                                                     <img
                                                         src={`/users/${user.id}.png`}

@@ -1,0 +1,55 @@
+.alert-modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+}
+
+.alert-modal-content {
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-modal-icon-wrapper {
+    width: 65px;
+    height: 65px;
+}
+.alert-modal-icon {
+    font-size: 2rem;
+}
+
+.icon-bg-success {
+    background-color: rgba(25, 135, 84, 0.1);
+}
+.icon-bg-error {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.alert-modal-text {
+    font-size: 0.95rem;
+}
+
+.alert-modal-btn {
+    border-radius: 8px;
+}
+
+.alert-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 6px;
+    cursor: pointer;
+    opacity: 0.8;
+    animation: shrinkBar 5s linear forwards;
+}
+
+.bar-color-success {
+    background-color: #198754;
+}
+.bar-color-error {
+    background-color: #dc3545;
+}
+
+@keyframes shrinkBar {
+    from { width: 100%; }
+    to { width: 0%; }
+}

@@ -2,7 +2,6 @@
     max-height: calc(100vh - 100px);
     position: sticky;
     overflow-y: auto;
-    top: 160px;
 }
 
 .friendName{
@@ -13,7 +12,3 @@
     font-size: 11px;
 }
 
-.friendOnline{
-    width: 8px;
-    height: 8px;
-}

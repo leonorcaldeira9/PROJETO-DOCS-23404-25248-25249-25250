@@ -2,6 +2,7 @@ import axios from 'axios';
 import {useCallback, useEffect, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import "../../components/postCard/postCard.css";
+import AlertModal from "../alertModal/alertModal.jsx";
 
 const formatData = (dataString) => {
     if (!dataString) return '';
@@ -16,17 +17,67 @@ const formatData = (dataString) => {
     return `${day}/${month}/${year} at ${hours}:${minutes}`;
 };
 
-const PostCard = ({ post, token, viewComments = false}) => {
+const PostCard = ({ post, token, viewComments = false, onPostUpdate}) => {
     const [likes, setLikes] = useState(0);
     const [hasLiked, setHasLiked] = useState(false);
     const [imageError, setImageError] = useState(false);
     const [comments, setComments] = useState([]);
+    const [isEditingPost, setIsEditingPost] = useState(false);
+    const [editedPost, setEditedPost] = useState("");
+    const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, postId: null });
 
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
 
     const currentUserId = localStorage.getItem('userId');
     const navigate = useNavigate();
+
+    const [modal, setModal] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: ''
+    });
+
+    const closeModal = () => {
+        setModal({ ...modal, isOpen: false });
+    };
+
+    const handleEditPost = () => {
+        setEditedPost(post.postText);
+        setIsEditingPost(true);
+        setIsOpen(false);
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditingPost(false);
+    };
+
+    const handleSaveEdit = async () => {
+        if(!editedPost.trim()) return;
+
+        try {
+            await axios.put(`http://localhost:3001/posts/update/${post.id}`, {
+                postText: editedPost
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setIsEditingPost(false);
+
+            if (typeof onPostUpdate === 'function') {
+                onPostUpdate();
+            }
+        } catch (error) {
+            console.error("Error updating post:", error);
+            setModal({
+                isOpen: true,
+                title: 'Update Failed',
+                message: "It was not possible to update the post. Please try again.",
+                type: 'error'
+            });
+        }
+    };
 
     const fetchLikes = useCallback(async() => {
         if (!token) return;
@@ -92,11 +143,6 @@ const PostCard = ({ post, token, viewComments = false}) => {
         setIsOpen(!isOpen);
     };
 
-    const handleEditPost = () => {
-        setIsOpen(false);
-        //('/edit-profile');
-    };
-
     const handleLike = async () => {
         const previousHasLiked = hasLiked;
         const previousLikes = likes;
@@ -116,6 +162,10 @@ const PostCard = ({ post, token, viewComments = false}) => {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
+
+            if (typeof onPostUpdate === 'function') {
+                onPostUpdate();
+            }
         } catch (error) {
             setHasLiked(previousHasLiked);
             setLikes(previousLikes);
@@ -123,18 +173,31 @@ const PostCard = ({ post, token, viewComments = false}) => {
         }
     };
 
-    const handleDeletePost = async (postId) => {
 
-        if(!window.confirm("Are you sure you want to delete your post?")) return;
+    const handleDeletePost = async () => {
+
+        const idToDelete = confirmDelete.postId;
+        setConfirmDelete({ isOpen: false, postId: null });
 
         try {
-            await axios.delete(`http://localhost:3001/posts/delete/${postId}`, {
+            await axios.delete(`http://localhost:3001/posts/delete/${idToDelete}`, {
                 headers: {Authorization: `Bearer ${token}`}
             });
-            window.location.reload();
+
+            if (typeof onPostUpdate === 'function') {
+                onPostUpdate();
+            } else {
+                navigate('/');
+            }
 
         }  catch (error) {
             console.error("Error deleting comment: ", error);
+            setModal({
+                isOpen: true,
+                title: 'Error',
+                message: "It was not possible to delete the post.",
+                type: 'error'
+            });
         }
     };
 
@@ -153,15 +216,27 @@ const PostCard = ({ post, token, viewComments = false}) => {
 
                         <div
                             className="me-2 d-flex align-items-center justify-content-center overflow-hidden rounded-circle bg-light user-profile-picture">
-                            {(!authorId || imageError) ? (
-                                <i className="bi bi-person-circle text-secondary user-profile-picture-default"></i>
-                            ) : (
+                            {/*{(!authorId || imageError) ? (*/}
+                            {/*    <i className="bi bi-person-circle text-secondary user-profile-picture-default"></i>*/}
+                            {/*) : (*/}
+                            {/*    <img*/}
+                            {/*        src={photoUrl}*/}
+                            {/*        alt={`Photo of ${post.fullName}`}*/}
+                            {/*        onError={() => setImageError(true)}*/}
+                            {/*    />*/}
+                            {/*)}*/}
+                            <i className="bi bi-person-circle text-secondary user-profile-picture-default"></i>
+                            {authorId && !imageError && (
                                 <img
                                     src={photoUrl}
                                     alt={`Photo of ${post.fullName}`}
+                                    className="position-absolute top-0 start-0 w-100 h-100"
+                                    style={{ objectFit: 'cover', zIndex: 1 }}
                                     onError={() => setImageError(true)}
+                                    loading="lazy"
                                 />
                             )}
+
                         </div>
 
                         <div>
@@ -185,20 +260,20 @@ const PostCard = ({ post, token, viewComments = false}) => {
                             {isOpen && (
                                 <div className="dropdown-menu show position-absolute end-0 mt-2 shadow-sm" style={{ minWidth: '200px' }}>
 
-                                    <Link
-                                        to="/EditProfile"
+                                    <button
+
                                         className="dropdown-item d-flex align-items-center text-decoration-none"
                                         onClick={handleEditPost}
                                     >
                                         <i className="bi bi-pencil-square me-2 text-secondary"></i> Edit Post
-                                    </Link>
+                                    </button>
 
                                     <div className="dropdown-divider"></div>
 
                                     <button
                                         className="dropdown-item d-flex align-items-center text-danger"
                                         onClick={() => {
-                                            handleDeletePost(post.id);
+                                            setConfirmDelete({ isOpen: true, postId: post.id });
                                             setIsOpen(false);
                                         }}
                                     >
@@ -211,8 +286,34 @@ const PostCard = ({ post, token, viewComments = false}) => {
 
                 </div>
 
-                <p className="card-text">{post.postText}</p>
 
+                {isEditingPost ? (
+                    <div className="mb-3">
+                        <textarea
+                            className="form-control bg-light mb-2 border-0"
+                            rows="3"
+                            value={editedPost}
+                            onChange={(e) => setEditedPost(e.target.value)}
+                            autoFocus
+                        />
+                        <div className="d-flex justify-content-end gap-2">
+                            <button
+                                className="btn btn-sm btn-light text-secondary fw-semibold"
+                                onClick={handleCancelEdit}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="btn btn-sm btn-primary fw-semibold px-3"
+                                onClick={handleSaveEdit}
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="card-text">{post.postText}</p>
+                )}
 
                 <hr/>
                 <div className="d-flex justify-content-between">
@@ -247,6 +348,23 @@ const PostCard = ({ post, token, viewComments = false}) => {
                 </div>
 
             </div>
+
+            <AlertModal
+                isOpen={modal.isOpen}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+                onClose={closeModal}
+            />
+
+            <AlertModal
+                isOpen={confirmDelete.isOpen}
+                title="Delete Post"
+                message="Are you sure you want to delete your post? This action cannot be undone."
+                type="error"
+                onClose={() => setConfirmDelete({ isOpen: false, postId: null })}
+                onConfirm={handleDeletePost}
+            />
         </div>
     );
 };

@@ -2,7 +2,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import './login.css';
 import loginImage from '../../assets/loginImage.png';
 import logo from '../../assets/logo.png'
-//import AlertModal from "../../components/alertModal.jsx";
+import AlertModal from "../../components/alertModal/alertModal.jsx";
 import {useState} from "react";
 import axios from "axios";
 
@@ -15,12 +15,16 @@ const Login = () => {
         loginPassword: ''
     });
 
-    /*const [modal, setModal] = useState({
+    const [modal, setModal] = useState({
         isOpen: false,
         title: '',
         message: '',
         type: ''
-    });*/
+    });
+
+    const closeModal = () => {
+        setModal({ ...modal, isOpen: false });
+    };
 
     const handleChange = (e) => {
         setformLoginData({
@@ -44,7 +48,12 @@ const Login = () => {
 
             navigate('/feed');
         } catch (error) {
-            alert(error.response?.data?.error || "Error signing up.");
+            setModal({
+                isOpen: true,
+                title: 'Login Failed',
+                message: error.response?.data?.error || "Incorrect email or password. Please try again.",
+                type: 'error'
+            });
         }
     };
 
@@ -120,6 +129,15 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+
+            <AlertModal
+                isOpen={modal.isOpen}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+                onClose={closeModal}
+            />
+
         </div>
     );
 };

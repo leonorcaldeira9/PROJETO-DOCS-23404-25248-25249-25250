@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate ,Link } from "react-router-dom";
 import axios from 'axios';
 import Navbar from "../../components/navBar/navBar.jsx";
 import PostCard from "../../components/postCard/postCard.jsx";
 import "../../pages/post/PostPage.css";
+import AlertModal from "../../components/alertModal/alertModal.jsx";
 
 
 const formatData = (dataString) => {
@@ -52,7 +53,6 @@ const CommentItem = ({ comment, allComments, isReply = false, postDate, currentU
 
     useEffect(() => {
 
-
         fetchCommentsLikes();
     }, [fetchCommentsLikes]);
 
@@ -87,7 +87,7 @@ const CommentItem = ({ comment, allComments, isReply = false, postDate, currentU
     return (
         <div key={comment.id} className={`comment-thread pb-3 pt-1 ${isReply ? 'comment-reply-item' : ''}`}>
             <div className="d-flex gap-3 position-relative z-1 bg-white pb-1">
-                <div className="d-flex align-items-center justify-content-center overflow-hidden rounded-circle bg-light user-profile-picture flex-shrink-0">
+                <Link to={`/profile/${comment.idUser}`} className="d-flex align-items-center justify-content-center overflow-hidden rounded-circle bg-light user-profile-picture flex-shrink-0">
 
                     <img
                         src={`/users/${comment.idUser}.png`}
@@ -99,12 +99,14 @@ const CommentItem = ({ comment, allComments, isReply = false, postDate, currentU
                         }}
                     />
                     <i className="bi bi-person-circle text-secondary user-profile-picture-default" style={{display: 'none'}}></i>
-                </div>
+                </Link>
 
                 <div className="w-100">
                     <div className="d-flex align-items-center gap-2">
-                        <span className="fw-bold fs-6">{comment.fullName}</span>
-                        <span className="text-muted small">{formatData(postDate)}</span>
+                        <Link to={`/profile/${comment.idUser}`} className="text-decoration-none text-dark" >
+                            <span className="fw-bold fs-6">{comment.fullName}</span>
+                        </Link>
+                            <span className="text-muted small">{formatData(postDate)}</span>
                     </div>
 
                     {states.editingCommentId === comment.id ? (
@@ -250,9 +252,21 @@ const PostPage = () => {
 
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [editCommentText, setEditCommentText] = useState("");
+    const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, commentId: null });
 
     const token = localStorage.getItem('token');
     const currentUserId = localStorage.getItem('userId');
+
+    const [modal, setModal] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: ''
+    });
+
+    const closeModal = () => {
+        setModal({ ...modal, isOpen: false });
+    };
 
     const fetchPostData = useCallback(async () => {
         if (!token) return;
@@ -306,21 +320,38 @@ const PostPage = () => {
 
         } catch (error) {
             console.error("Error creating comment:", error);
+            setModal({
+                isOpen: true,
+                title: 'Create Failed',
+                message: "It was not possible to create the comment. Please try again.",
+                type: 'error'
+            });
         }
     };
 
-    const handleDeleteComment = async (commentId) => {
+    const handleDeleteComment = (commentId) => {
+        setConfirmDelete({ isOpen: true, commentId: commentId });
+    };
 
-        if(!window.confirm("Are you sure you want to delete your comment?")) return;
+    const executeDeleteComment = async () => {
+
+        const idToDelete = confirmDelete.commentId;
+        setConfirmDelete({ isOpen: false, commentId: null });
 
         try {
-          await axios.delete(`http://localhost:3001/comments/delete/${commentId}`, {
+          await axios.delete(`http://localhost:3001/comments/delete/${idToDelete}`, {
              headers: {Authorization: `Bearer ${token}`}
           });
 
           fetchPostData();
         }  catch (error) {
             console.error("Error deleting comment: ", error);
+            setModal({
+                isOpen: true,
+                title: 'Error',
+                message: "It was not possible to delete the comment.",
+                type: 'error'
+            });
         }
     };
 
@@ -338,6 +369,12 @@ const PostPage = () => {
             fetchPostData();
         }  catch (error) {
             console.error("Error updating comment: ", error);
+            setModal({
+                isOpen: true,
+                title: 'Error',
+                message: "It was not possible to update the comment.",
+                type: 'error'
+            });
         }
     }
 
@@ -433,10 +470,26 @@ const PostPage = () => {
                     </div>
                 </div>
             </div>
+
+            <AlertModal
+                isOpen={modal.isOpen}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+                onClose={closeModal}
+            />
+
+            <AlertModal
+                isOpen={confirmDelete.isOpen}
+                title="Delete Comment"
+                message="Are you sure you want to delete your comment? This action cannot be undone."
+                type="error"
+                onClose={() => setConfirmDelete({ isOpen: false, commentId: null })}
+                onConfirm={executeDeleteComment}
+            />
+
         </div>
     );
-
-
 };
 
 export default PostPage;

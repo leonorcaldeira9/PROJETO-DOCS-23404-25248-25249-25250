@@ -1,6 +1,6 @@
 import {Link, useNavigate} from 'react-router-dom';
 import './navBar.css';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import logo from "../../assets/logo.png";
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -15,6 +15,9 @@ const Navbar = () => {
 
     const [imageError, setImageError] = useState(false);
     const [notificationCount, setNotificationCount] = useState(0);
+    const [isBellRinging, setIsBellRinging] = useState(false);
+    const prevCount = useRef(0);
+
     const token = localStorage.getItem('token');
 
     const navigate = useNavigate();
@@ -31,6 +34,15 @@ const Navbar = () => {
             window.removeEventListener('perfilAtualizado', updateName);
         };
     }, []);
+
+    useEffect(() => {
+        if (notificationCount > prevCount.current) {
+
+            setIsBellRinging(true);
+
+            prevCount.current = notificationCount;
+        }
+    }, [notificationCount]);
 
     useEffect(() => {
         const fetchNotificationCount = async () => {
@@ -56,7 +68,13 @@ const Navbar = () => {
         };
 
         fetchNotificationCount();
-    }, [token]);
+
+        window.addEventListener('notificationsUpdate', fetchNotificationCount);
+
+        return () => {
+            window.removeEventListener('notificationsUpdate', fetchNotificationCount);
+        };
+    }, [token, userId]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -92,7 +110,7 @@ const Navbar = () => {
 
                     <Link to={"/notifications"}>
                         <button className="btn btn-light border-0 rounded-circle d-flex align-items-center justify-content-center nav-icons position-relative">
-                            <i className="bi bi-bell fs-3 text-secondary"></i>
+                            <i className={`bi bi-bell fs-3 text-secondary ${isBellRinging ? 'bell-animation' : ''}`}></i>
 
                             {notificationCount > 0 && (
                                 <span className="position-absolute badge rounded-pill bg-danger notification-count">
@@ -115,7 +133,7 @@ const Navbar = () => {
                         <i className="bi bi-box-arrow-left fs-3 text-secondary"></i>
                     </button>
 
-                    <button className="btn btn-light border-0 p-0 rounded-circle ms-3 d-flex align-items-center justify-content-center shadow-sm user-profile-picture">
+                    <button className="btn btn-light border-0 p-0 rounded-circle ms-3 d-flex align-items-center justify-content-center shadow-sm user-profile-picture position-relative overflow-hidden">
 
                         {(!userId || imageError) ? (
                             <i className="bi bi-person-circle text-secondary user-profile-picture-default" onClick={() => navigate('/profile')}></i>

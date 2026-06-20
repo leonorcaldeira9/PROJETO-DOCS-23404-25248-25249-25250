@@ -1,30 +1,63 @@
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './alertModal.css'
+import { useEffect } from "react";
 
+const AlertModal = ({ isOpen, title, message, type, onClose, onConfirm }) => {
 
-const alertModel = ({ isOpen, title, message, type, closeModal }) => {
+    useEffect(() => {
+        if (!isOpen || onConfirm) return;
+
+        const timer = setTimeout(() => {
+            onClose();
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [isOpen, onClose, onConfirm]);
+
     if (!isOpen) return null;
 
-    const colorButton = type === 'success' ? 'btn-primary' : 'btn-danger';
-    const colorText = type === 'success' ? 'text-primary' : 'text-danger';
+    const isSuccess = type === 'success';
+    const colorButton = isSuccess ? 'btn-success' : 'btn-danger';
+    const iconClass = isSuccess ? 'bi-check-lg text-success' : 'bi-x-lg text-danger';
+    const iconBgClass = isSuccess ? 'icon-bg-success' : 'icon-bg-error';
+    const barColorClass = isSuccess ? 'bar-color-success' : 'bar-color-error';
 
     return (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '15px' }}>
+        <div className="modal show d-block alert-modal-backdrop">
+            <div className="modal-dialog modal-dialog-centered modal-sm">
+                <div className="modal-content border-0 shadow-lg text-center p-4 alert-modal-content">
 
-                    <div className="modal-header border-0">
-                        <h5 className={`modal-title fw-bold ${colorText}`}>{title}</h5>
-                        <button type="button" className="btn-close" onClick={closeModal}></button>
+                    <div className="d-flex justify-content-center mb-3 mt-2">
+                        <div className={`d-flex align-items-center justify-content-center rounded-circle alert-modal-icon-wrapper ${iconBgClass}`}>
+                            <i className={`bi ${iconClass} alert-modal-icon`}></i>
+                        </div>
                     </div>
 
-                    <div className="modal-body">
-                        <p>{message}</p>
+                    <div className="modal-body p-0 mb-4">
+                        <h4 className="fw-bold text-dark mb-2">{title}</h4>
+                        <p className="text-secondary mb-0 alert-modal-text">{message}</p>
                     </div>
 
-                    <div className="modal-footer border-0">
-                        <button type="button" className={`btn ${colorButton}`} onClick={closeModal}>
-                            OK
-                        </button>
+                    <div className="modal-footer border-0 p-0">
+                        {onConfirm ? (
+                            <div className="d-flex gap-2 w-100">
+                                <button type="button" className="btn btn-light w-50 py-2 fw-semibold alert-modal-btn" onClick={onClose}>
+                                    Cancel
+                                </button>
+                                <button type="button" className={`btn ${colorButton} w-50 py-2 fw-semibold alert-modal-btn`} onClick={onConfirm}>
+                                    Delete
+                                </button>
+                            </div>
+                        ) : (
+                            <button type="button" className={`btn ${colorButton} w-100 py-2 fw-semibold alert-modal-btn`} onClick={onClose}>
+                                OK
+                            </button>
+                        )}
                     </div>
+
+                    {!onConfirm && (
+                        <div className={`alert-progress-bar ${barColorClass}`} onClick={onClose} />
+                    )}
 
                 </div>
             </div>
@@ -32,4 +65,4 @@ const alertModel = ({ isOpen, title, message, type, closeModal }) => {
     );
 };
 
-export default alertModel;
+export default AlertModal;
