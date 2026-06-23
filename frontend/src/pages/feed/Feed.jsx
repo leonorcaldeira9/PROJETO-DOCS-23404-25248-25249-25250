@@ -89,18 +89,18 @@ const Feed = () => {
     return (
 
 
-        <div className="feed">
+        <div className="feed pb-5">
             <Navbar/>
 
-            <div className="container mt-5">
+            <div className="container mt-4 mt-md-5">
 
-                <div className="row gx-5">
+                <div className="row g-3 gx-md-5">
 
-                    <div className="col-md-3">
+                    <div className="col-12 col-md-3 order-1 order-md-1 mb-2 mb-md-0">
                         <ListOptions></ListOptions>
                     </div>
 
-                    <div className="col-md-6 justify-content-center">
+                    <div className="col-12 col-md-6 order-3 order-md-2 justify-content-center">
 
                         <div className="card shadow-sm border-0 mb-4 p-3">
                             <textarea
@@ -166,7 +166,7 @@ const Feed = () => {
                         )}
                     </div>
 
-                    <div className="col-md-3">
+                    <div className="col-12 col-md-3 order-2 order-md-3 mb-4 mb-md-0">
                         <ListFriends></ListFriends>
                     </div>
                 </div>

@@ -80,9 +80,9 @@ const Register = () => {
     };
 
     return (
-        <div className="register d-flex justify-content-center align-items-center p-5 position-relative min-vh-100">
+        <div className="register d-flex flex-column justify-content-center align-items-center p-3 p-md-5 position-relative min-vh-100">
 
-            <div className="position-absolute top-0 start-0 m-4">
+            <div className="position-absolute top-0 start-0 m-4 d-none d-md-block">
                 <Link to={"/login"}>
                     <img
                         src={logo}
@@ -92,12 +92,22 @@ const Register = () => {
                 </Link>
             </div>
 
-            <div className="card shadow-lg p-sm-5 border-0 card-style h-auto" >
+            <div className="d-block d-md-none text-center mb-3 mt-2">
+                <Link to={"/login"}>
+                    <img
+                        src={logo}
+                        className="logo img-fluid"
+                        alt="Logo do Feicebuque"
+                    />
+                </Link>
+            </div>
 
-                <h2 className="text-center">Create an Account</h2>
+            <div className="card shadow-lg p-4 p-md-5 border-0 card-style h-auto w-100" >
+
+                <h2 className="text-center mb-4">Create an Account</h2>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-2">
+                    <div className="mb-3">
                         <label htmlFor="fullNameInput" className="form-label fw-bold text-dark">Full Name</label>
                         <input
                             id="fullNameInput"
@@ -113,7 +123,7 @@ const Register = () => {
                     </div>
 
                     <div className="row">
-                        <div className="col-md-6 mb-2">
+                        <div className="col-12 col-md-6 mb-3">
                             <label htmlFor="emailInput" className="form-label fw-bold text-dark">Email</label>
                             <input
                                 id="emailInput"
@@ -128,7 +138,7 @@ const Register = () => {
                             />
                         </div>
 
-                        <div className="col-md-6 mb-2">
+                        <div className="col-12 col-md-6 mb-3">
                             <label htmlFor="passwordInput" className="form-label fw-bold text-dark">Password</label>
                             <input
                                 id="passwordInput"
@@ -146,7 +156,7 @@ const Register = () => {
 
                     <div className="row">
 
-                        <div className="col-md-6 mb-2">
+                        <div className="col-12 col-md-6 mb-3">
                             <span className="form-label fw-bold text-dark d-block mb-2">Gender</span>
 
                             <div className="form-check form-check-inline">
@@ -195,7 +205,7 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <div className="col-md-6 mb-2">
+                        <div className="col-12 col-md-6 mb-3">
                             <label htmlFor="birthdateInput" className="form-label fw-bold text-dark">Birthdate</label>
                             <input
                                 id="birthdateInput"
@@ -211,7 +221,7 @@ const Register = () => {
                     </div>
 
                     <div className="row">
-                        <div className="col-sm mb-2">
+                        <div className="col-12 col-md-6 mb-3">
                             <label htmlFor="countryInput" className="form-label fw-bold text-dark">Country</label>
                             <input
                                 id="countryInput"
@@ -226,7 +236,7 @@ const Register = () => {
                             />
                         </div>
 
-                        <div className="col-sm mb-2">
+                        <div className="col-12 col-md-6 mb-3">
                             <label htmlFor="cityInput" className="form-label fw-bold text-dark">City</label>
                             <input
                                 id="cityInput"
@@ -241,7 +251,7 @@ const Register = () => {
                             />
                         </div>
 
-                        <div className="col-sm mb-5">
+                        <div className="col-12 col-md-4 mb-4">
                             <label htmlFor="phoneInput" className="form-label fw-bold text-dark">Phone Number</label>
                             <input
                                 id="phoneInput"
@@ -258,11 +268,13 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-50 mb-2 d-block mx-auto">
-                        Create Account
-                    </button>
+                    <div className="d-grid col-12 col-md-6 mx-auto mb-4 mt-2">
+                        <button type="submit" className="btn btn-primary w-50 mb-2 d-block mx-auto">
+                            Create Account
+                        </button>
+                    </div>
 
-                    <p className="text-center fs-6">Do you have an account?
+                    <p className="text-center fs-6 mb-0">Do you have an account?
                         <Link to="/login">
                             <button type="button" className="btn btn-link fs-6">Login</button>
                         </Link>

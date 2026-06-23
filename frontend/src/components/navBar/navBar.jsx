@@ -88,11 +88,11 @@ const Navbar = () => {
 
     return (
         <nav className="navbar sticky-top navbar-light bg-light shadow-sm">
-            <div className="container-fluid justify-content-start">
+            <div className="container-fluid justify-content-between align-items-center">
 
                 <div className="d-flex align-items-center">
 
-                    <Link to={"/feed"} className="navbar-brand d-flex align-items-center">
+                    <Link to={"/feed"} className="navbar-brand d-flex align-items-center m-0">
                         <img
                             src={logo}
                             className="logo img-fluid"
@@ -100,13 +100,13 @@ const Navbar = () => {
                         />
                     </Link>
 
-                    <div className="ms-3 d-flex align-items-center">
-                        <h4 className="mb-0 text-secondary">Welcome, {name}!</h4>
+                    <div className="ms-3 d-none d-md-flex align-items-center">
+                        <h4 className="mb-0 text-secondary fw-semibold">Welcome, {name}!</h4>
                     </div>
                 </div>
 
 
-                <div className="d-flex align-items-center gap-1 position-absolute top-50 end-0 translate-middle-y pe-3">
+                <div className="d-flex align-items-center gap-1 gap-md-2">
 
                     <Link to={"/notifications"}>
                         <button className="btn btn-light border-0 rounded-circle d-flex align-items-center justify-content-center nav-icons position-relative">

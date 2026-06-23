@@ -203,115 +203,117 @@ const Profile = () => {
     }
 
     return (
-        <div className="background d-flex flex-column">
+        <div className="background d-flex flex-column min-vh-100 pb-5">
             <Navbar />
 
-            <div className="card shadow-sm border-0 mt-5 mb-5 w-100 mx-auto profile-card">
-                <div className="banner"></div>
-                <div className="px-4">
-                    <div className="userCircle d-flex align-items-center justify-content-center overflow-hidden bg-light shadow-sm position-absolute">
-                        {(!profileUserId || imageError) ? (
-                            <i className="bi bi-person-circle text-secondary w-100 h-100 d-flex align-items-center justify-content-center default-icon"></i>
-                        ) : (
-                            <img
-                                src={photoUrl}
-                                alt="foto de perfil"
-                                className="w-100 h-100 profile-img"
-                                onError={() => setImageError(true)}
-                            />
-                        )}
-                    </div>
-
-
-                    <div className="sub-card">
-                        <h3 className="mb-0 fw-bold mx-2">{userData?.fullName || 'Anonymous'}</h3>
-                        <p className="mb-0 text-muted mx-2 mt-3">
-                            <i className="bi bi-geo-alt-fill me-1"></i>
-                            {userData?.city || 'Location unknown'}
-                        </p>
-                        <p className="mb-0 text-muted mx-2">
-                            <i className="bi bi-cake me-1"></i>
-                            {formatData(userData?.birthDate)}
-                        </p>
-                    </div>
-
-                    {profileUserId !== userId && (
-                        <div className="mt-2 mx-2 d-flex gap-2 mb-4">
-                            {relation === 'F' && (
-                                <>
-                                    <button className="btn btn-success btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
-                                        <i className="bi bi-check-lg"></i> Friends
-                                    </button>
-                                    <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1" onClick={() => triggerConfirmAction('unfriend')}>
-                                        <i className="bi bi-person-x-fill"></i> Unfriend
-                                    </button>
-                                    <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1" onClick={() => triggerConfirmAction('block')}>
-                                        <i className="bi bi-slash-circle"></i> Block
-                                    </button>
-                                </>
-                            )}
-
-                            {relation === 'P' && (
-                                <>
-                                    <button className="btn btn-warning text-dark btn-sm fw-semibold d-flex align-items-center gap-1" disabled>
-                                        <i className="bi bi-clock-history"></i> Pending Request
-                                    </button>
-                                    <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleRemoveFriend}>
-                                        <i className="bi bi-x-circle-fill"></i> Cancel
-                                    </button>
-                                </>
-                            )}
-
-                            {relation === 'none' && (
-                                <>
-                                    <button className="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1" onClick={handleSendRequest}>
-                                        <i className="bi bi-person-plus-fill"></i> Add Friend
-                                    </button>
-                                    <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1" onClick={() => triggerConfirmAction('block')}>
-                                        <i className="bi bi-slash-circle"></i> Block
-                                    </button>
-                                </>
-                            )}
-
-                            {relation === 'B' && (
-                                <button
-                                    className="btn btn-danger btn-sm fw-semibold d-flex align-items-center gap-1"
-                                    onClick={handleUnblockUser}
-                                >
-                                    <i className="bi bi-unlock-fill"></i> Unblock User
-                                </button>
+            <div className="container mt-3 mt-md-5 mb-5">
+                <div className="card shadow-sm border-0 w-100 mx-auto profile-card">
+                    <div className="banner"></div>
+                    <div className="px-4">
+                        <div className="userCircle d-flex align-items-center justify-content-center overflow-hidden bg-light shadow-sm position-absolute">
+                            {(!profileUserId || imageError) ? (
+                                <i className="bi bi-person-circle text-secondary w-100 h-100 d-flex align-items-center justify-content-center default-icon"></i>
+                            ) : (
+                                <img
+                                    src={photoUrl}
+                                    alt="foto de perfil"
+                                    className="w-100 h-100 profile-img"
+                                    onError={() => setImageError(true)}
+                                />
                             )}
                         </div>
-                    )}
 
-                    <hr className="text-muted opacity-25" />
 
-                    <div className="w-100 mx-auto mt-4 timeline-container">
-                        <h5 className="mb-3 fw-bold text-dark px-2">Timeline</h5>
+                        <div className="sub-card">
+                            <h3 className="mb-0 fw-bold mx-2">{userData?.fullName || 'Anonymous'}</h3>
+                            <p className="mb-0 text-muted mx-2 mt-3">
+                                <i className="bi bi-geo-alt-fill me-1"></i>
+                                {userData?.city || 'Location unknown'}
+                            </p>
+                            <p className="mb-0 text-muted mx-2">
+                                <i className="bi bi-cake me-1"></i>
+                                {formatData(userData?.birthDate)}
+                            </p>
+                        </div>
 
-                        {posts.length === 0 ? (
-                            <div className="card shadow-sm border-0 p-5 text-center bg-light mb-4">
-                                <i className="bi bi-journal-x fs-1 text-muted mb-2"></i>
-                                <p className="text-muted fw-semibold mb-0">No posts available.</p>
-                            </div>
-                        ) : (
-                            <div className="d-flex flex-column gap-3 pb-5">
-                                {posts.map((post) => {
-                                    const postCompleto = {
-                                        ...post,
-                                        fullName: post.fullName || userData?.fullName
-                                    };
+                        {profileUserId !== userId && (
+                            <div className="mt-2 mx-2 d-flex flex-wrap gap-2 mb-4">
+                                {relation === 'F' && (
+                                    <>
+                                        <button className="btn btn-success btn-sm fw-semibold d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" disabled>
+                                            <i className="bi bi-check-lg"></i> Friends
+                                        </button>
+                                        <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" onClick={() => triggerConfirmAction('unfriend')}>
+                                            <i className="bi bi-person-x-fill"></i> Unfriend
+                                        </button>
+                                        <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" onClick={() => triggerConfirmAction('block')}>
+                                            <i className="bi bi-slash-circle"></i> Block
+                                        </button>
+                                    </>
+                                )}
 
-                                    return (
-                                        <PostCard
-                                            key={postCompleto.id}
-                                            post={postCompleto}
-                                            token={token}
-                                        />
-                                    );
-                                })}
+                                {relation === 'P' && (
+                                    <>
+                                        <button className="btn btn-warning text-dark btn-sm fw-semibold d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" disabled>
+                                            <i className="bi bi-clock-history"></i> Pending Request
+                                        </button>
+                                        <button className="btn btn-outline-danger btn-sm fw-semibold d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" onClick={handleRemoveFriend}>
+                                            <i className="bi bi-x-circle-fill"></i> Cancel
+                                        </button>
+                                    </>
+                                )}
+
+                                {relation === 'none' && (
+                                    <>
+                                        <button className="btn btn-primary btn-sm fw-semibold d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" onClick={handleSendRequest}>
+                                            <i className="bi bi-person-plus-fill"></i> Add Friend
+                                        </button>
+                                        <button className="btn btn-light border btn-sm text-danger d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0" onClick={() => triggerConfirmAction('block')}>
+                                            <i className="bi bi-slash-circle"></i> Block
+                                        </button>
+                                    </>
+                                )}
+
+                                {relation === 'B' && (
+                                    <button
+                                        className="btn btn-danger btn-sm fw-semibold d-flex align-items-center gap-1 flex-grow-1 flex-md-grow-0"
+                                        onClick={handleUnblockUser}
+                                    >
+                                        <i className="bi bi-unlock-fill"></i> Unblock User
+                                    </button>
+                                )}
                             </div>
                         )}
+
+                        <hr className="text-muted opacity-25" />
+
+                        <div className="w-100 mx-auto mt-4 timeline-container">
+                            <h5 className="mb-3 fw-bold text-dark px-2">Timeline</h5>
+
+                            {posts.length === 0 ? (
+                                <div className="card shadow-sm border-0 p-4 p-md-5 text-center bg-light mb-4">
+                                    <i className="bi bi-journal-x fs-1 text-muted mb-2"></i>
+                                    <p className="text-muted fw-semibold mb-0">No posts available.</p>
+                                </div>
+                            ) : (
+                                <div className="d-flex flex-column gap-3 pb-5">
+                                    {posts.map((post) => {
+                                        const postCompleto = {
+                                            ...post,
+                                            fullName: post.fullName || userData?.fullName
+                                        };
+
+                                        return (
+                                            <PostCard
+                                                key={postCompleto.id}
+                                                post={postCompleto}
+                                                token={token}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
