@@ -172,6 +172,34 @@ const PostCard = ({ post, token, viewComments = false, onPostUpdate}) => {
         }
     };
 
+    const handleCommentClick = async (e) => {
+        e.stopPropagation();
+
+        try {
+            await axios.get(`http://localhost:3001/posts/${post.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            navigate(`/post/${post.id}`);
+
+        } catch (error) {
+            if (error.response && (error.response.status === 403 || error.response.status === 404)) {
+                setModal({
+                    isOpen: true,
+                    title: 'Access Denied',
+                    message: "You can no longer interact with this post. It might be private or you are no longer friends with the author.",
+                    type: 'error'
+                });
+            } else {
+                setModal({
+                    isOpen: true,
+                    title: 'Error',
+                    message: "An error occurred while trying to open the post.",
+                    type: 'error'
+                });
+            }
+        }
+    };
 
     const handleDeletePost = async () => {
 
@@ -323,7 +351,7 @@ const PostCard = ({ post, token, viewComments = false, onPostUpdate}) => {
                         {!viewComments && (
                             <button
                                 className="btn btn-light btn-sm text-secondary fw-semibold"
-                                onClick={(e) => { e.stopPropagation(); navigate(`/post/${post.id}`); }}
+                                onClick={handleCommentClick}
                             >
                                 <i className="bi bi-chat me-1"></i>
                                 {comments.length > 0 ? comments.length : 'Comment'}

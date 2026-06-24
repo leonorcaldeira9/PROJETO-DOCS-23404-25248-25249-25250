@@ -3,6 +3,7 @@ import axios from 'axios';
 import PostCard from '../../components/postCard/postCard.jsx';
 import Navbar from "../../components/navBar/navBar.jsx";
 import "../../pages/likedPosts/likedPosts.css"
+import AlertModal from "../../components/alertModal/alertModal.jsx";
 
 const LikedPosts = () => {
     const token = localStorage.getItem('token');
@@ -10,6 +11,17 @@ const LikedPosts = () => {
 
     const [likedPosts, setLikedPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const [modal, setModal] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        type: ''
+    });
+
+    const closeModal = () => {
+        setModal({ ...modal, isOpen: false });
+    };
 
     const fetchLikedPosts = useCallback(async () => {
         if (!targetUserId || !token) {
@@ -53,6 +65,12 @@ const LikedPosts = () => {
 
         } catch (error) {
             console.error("Error loading liked posts:", error);
+            setModal({
+                isOpen: true,
+                title: 'Connection Error',
+                message: 'Unable to load your likes. Try refreshing the page.',
+                type: 'error'
+            });
         } finally {
             setIsLoading(false);
         }
@@ -81,7 +99,7 @@ const LikedPosts = () => {
                 {!isLoading && (
                     <span className="badge rounded-pill bg-light text-secondary border px-3 py-2 fs-6">
                             {likedPosts.length} {likedPosts.length === 1 ? 'post' : 'posts'}
-                        </span>
+                    </span>
                 )}
             </div>
 
@@ -114,6 +132,13 @@ const LikedPosts = () => {
                 )}
 
             </div>
+            <AlertModal
+                isOpen={modal.isOpen}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+                onClose={closeModal}
+            />
         </div>
     );
 };
