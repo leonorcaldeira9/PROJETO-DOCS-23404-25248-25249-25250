@@ -71,7 +71,7 @@ const FriendsListWidget = () => {
     return (
         <div className="card shadow-sm border-0 p-3 friends-card">
             <h6 className="fw-bold mb-3">
-                <i className="bi bi-people-fill me-2 text-info"></i>
+                <i className="bi bi-people-fill me-2 text-primary"></i>
                 Friends ({friends.length})
             </h6>
 

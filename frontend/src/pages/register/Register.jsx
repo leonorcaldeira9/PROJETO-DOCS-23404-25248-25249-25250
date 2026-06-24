@@ -15,7 +15,6 @@ const Register = () => {
         loginPassword: '',
         gender: '',
         birthDate: '',
-        //maritalStatus: '',
         city: '',
         country: '',
         phoneNumber: ''
