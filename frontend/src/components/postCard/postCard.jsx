@@ -168,7 +168,7 @@ const PostCard = ({ post, token, viewComments = false, onPostUpdate}) => {
         } catch (error) {
             setHasLiked(previousHasLiked);
             setLikes(previousLikes);
-            console.error("Erro ao alterar o like:", error);
+            console.error("Error changing the like:", error);
         }
     };
 

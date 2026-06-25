@@ -54,7 +54,7 @@ const LikedPosts = () => {
                             fullName: userRes.data.fullName
                         };
                     } catch (userError) {
-                        console.error(`Erro ao carregar o user ${post.idUser}:`, userError);
+                        console.error(`Error loading user ${post.idUser}:`, userError);
                         return post;
                     }
                 })

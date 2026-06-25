@@ -78,7 +78,7 @@ const CommentItem = ({ comment, allComments, isReply = false, postDate, currentU
         } catch (error) {
             setHasLiked(previousHasLiked);
             setLikesCount(previousLikes);
-            console.error("Erro ao alterar o like:", error);
+            console.error("Error changing the like:", error);
         }
     };
 

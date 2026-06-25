@@ -86,7 +86,7 @@ const Register = () => {
                     <img
                         src={logo}
                         className="logo img-fluid"
-                        alt="Logo do Feicebuque"
+                        alt="Logo of Feicebuque"
                     />
                 </Link>
             </div>
@@ -96,7 +96,7 @@ const Register = () => {
                     <img
                         src={logo}
                         className="logo img-fluid"
-                        alt="Logo do Feicebuque"
+                        alt="Logo of Feicebuque"
                     />
                 </Link>
             </div>

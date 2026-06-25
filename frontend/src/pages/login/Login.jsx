@@ -65,7 +65,7 @@ const Login = () => {
                     <img
                         src={logo}
                         className="logo img-fluid"
-                        alt="Logo do Feicebuque"
+                        alt="Logo of Feicebuque"
                     />
                 </Link>
             </div>
@@ -75,7 +75,7 @@ const Login = () => {
                     <img
                         src={logo}
                         className="logo img-fluid"
-                        alt="Logo do Feicebuque"
+                        alt="Logo of Feicebuque"
                     />
                 </Link>
             </div>
@@ -87,7 +87,7 @@ const Login = () => {
                         <img
                             src={loginImage}
                             className="img-fluid h-100 w-100 login-image object-fit-cover"
-                            alt="Capa do Feicebuque"
+                            alt="Cover of Feicebuque"
                         />
                     </div>
 

@@ -216,7 +216,7 @@ const Profile = () => {
                             ) : (
                                 <img
                                     src={photoUrl}
-                                    alt="foto de perfil"
+                                    alt="profile photo"
                                     className="w-100 h-100 profile-img"
                                     onError={() => setImageError(true)}
                                 />

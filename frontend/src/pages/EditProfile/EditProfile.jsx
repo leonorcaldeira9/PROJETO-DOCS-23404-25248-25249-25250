@@ -141,7 +141,7 @@ const EditProfile = () => {
     };
 
     if (isLoading) {
-        return <div className="text-center mt-5">A carregar dados do perfil...</div>;
+        return <div className="text-center mt-5">Loading profile data...</div>;
     }
 
     return (
