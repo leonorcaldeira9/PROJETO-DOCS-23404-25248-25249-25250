@@ -32,6 +32,18 @@ const createUser=(req,res)=>{
         return res.status(400).json({ error: "Please fill in all required fields." })
     }
 
+    const userBirthDate = new Date(req.body.birthDate);
+    const today = new Date();
+    const minimumDate = new Date(
+        today.getFullYear() - 16,
+        today.getMonth(),
+        today.getDate()
+    );
+
+    if (userBirthDate > minimumDate) {
+        return res.status(400).json({ error: "You must be at least 16 years old to create an account." });
+    }
+
     const encryptSecurityLevel = 10;
 
     bcrypt.hash(req.body.loginPassword, encryptSecurityLevel, (err, hash) => {

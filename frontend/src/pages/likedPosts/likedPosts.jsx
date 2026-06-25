@@ -36,32 +36,7 @@ const LikedPosts = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            const postsData = response.data;
-
-            const postsWithUsers = await Promise.all(
-                postsData.map(async (post) => {
-
-                    if (!post.idUser) return post;
-
-                    try {
-
-                        const userRes = await axios.get(`http://localhost:3001/users/${post.idUser}`, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        });
-
-                        return {
-                            ...post,
-                            fullName: userRes.data.fullName
-                        };
-                    } catch (userError) {
-                        console.error(`Error loading user ${post.idUser}:`, userError);
-                        return post;
-                    }
-                })
-            );
-
-
-            setLikedPosts(postsWithUsers);
+            setLikedPosts(response.data);
 
         } catch (error) {
             console.error("Error loading liked posts:", error);

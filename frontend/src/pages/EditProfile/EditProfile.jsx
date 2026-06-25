@@ -6,6 +6,12 @@ import AlertModal from "../../components/alertModal/alertModal.jsx";
 
 const EditProfile = () => {
     const navigate = useNavigate();
+    const today = new Date();
+    const maxYear = today.getFullYear() - 16;
+    const maxMonth = String(today.getMonth() + 1).padStart(2, '0');
+    const maxDay = String(today.getDate()).padStart(2, '0');
+
+    const maxValidDate = `${maxYear}-${maxMonth}-${maxDay}`;
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
@@ -240,6 +246,7 @@ const EditProfile = () => {
                                     className="form-control"
                                     value={formData.birthDate}
                                     onChange={handleChange}
+                                    max={maxValidDate}
                                     required
                                 />
                             </div>

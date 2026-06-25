@@ -8,6 +8,12 @@ import AlertModal from "../../components/alertModal/alertModal.jsx";
 const Register = () => {
 
     const navigate = useNavigate();
+    const today = new Date();
+    const maxYear = today.getFullYear() - 16;
+    const maxMonth = String(today.getMonth() + 1).padStart(2, '0');
+    const maxDay = String(today.getDate()).padStart(2, '0');
+
+    const maxValidDate = `${maxYear}-${maxMonth}-${maxDay}`;
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -212,6 +218,7 @@ const Register = () => {
                                 name="birthDate"
                                 value={formData.birthDate}
                                 onChange={handleChange}
+                                max={maxValidDate}
                                 className="form-control form-control-lg bg-light border-0 fs-6"
                                 required
                                 autoComplete="birthdate"
